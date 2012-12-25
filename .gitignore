@@ -35,3 +35,5 @@ Makefile.in
 /src/.deps/
 /src/Makefile
 /src/fieldx
+/stamp-h1
+/config.h

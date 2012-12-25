@@ -29,3 +29,9 @@ Makefile.in
 /depcomp
 /install-sh
 /missing
+/Makefile
+/config.log
+/config.status
+/src/.deps/
+/src/Makefile
+/src/fieldx

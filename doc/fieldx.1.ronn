@@ -1,0 +1,83 @@
+fieldx(1) -- a field extraction utility
+=============================================
+
+## SYNOPSIS
+
+`fieldx` [<OPTIONS>] <FIELD>...<br>
+
+## DESCRIPTION
+
+`fieldx` prints specified fields from column based input.
+
+OPTIONS
+
+* `-d`, `--delimiters`=<STRING>:
+  Use  all characters from STRING as field delimiters. The default
+  delimiter characters are <tab> and <space>
+
+* `-e`, `--empty`:
+  Allow empty fields
+
+* `-E`, `--exclude`:
+  List of strings to exclude from output separated by :
+
+* `-f`, `--file`=<FILE>:
+  Read input from <FILE> instead of stdin
+
+* `-s`, `--separator`=<STRING>:
+  Separator used in output text
+
+* `-?`, `--help`:
+  Give this help list
+
+* `--usage`:
+  Give a short usage message
+
+* `-V`, `--version`:
+  Print program version
+
+## ENVIRONMENT
+
+* `FIELDX_EXCLUDE`:
+  This is a : separated list of strings to be removed from  fields
+  before printing.  Overridden by the -E option.
+
+## EXAMPLES
+
+Select and rearrage output from column based commands:
+
+    $ df | fieldx 6 5
+    Mounted Use%
+    / 9%
+    /dev 1%
+    /run 1%
+    /run/lock 0%
+    /run/shm 0%
+
+Non-numeric fields are outputted directly:
+
+    $ ls -l /etc | fieldx 9 is owned by 3
+    adduser.conf is owned by root
+    alternatives/ is owned by root
+    apparmor/ is owned by root
+
+Fixed formats, such as /etc/passwd, can have different delimiters and
+possibly contain empty fields:
+
+    $ cat /etc/passwd | fieldx -e -d: 1 7
+    root /bin/bash
+    daemon /bin/sh
+    bin /bin/sh
+    sys /bin/sh
+
+Change the output separator to create new file formats:
+
+    $ ps aux | fieldx -s, 1 2 | head
+    USER,PID
+    root,1
+    root,2
+    root,3
+
+## SEE ALSO
+
+awk(1), cut(1)

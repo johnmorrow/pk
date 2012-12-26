@@ -1,4 +1,1 @@
-fieldx
-======
-
-A field extractor command line utility
+doc/fieldx.1.ronn

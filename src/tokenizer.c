@@ -15,6 +15,7 @@
  *
  */
 
+#include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -98,20 +99,39 @@ static void remove_line_ending(char *line)
     }
 }
 
-static char *tokenizer_next(TOKENIZER *self)
+static inline bool inside_token(const char *string, const char *delimiters)
 {
-    char *token;
-    if (self->allow_empty_tokens)
+    register const char *j = delimiters;
+    while (*j)
     {
-        token = strsep(&self->strsep_ptr, self->delimiters);
+        if (*j++ == *string)
+        {
+            return false;
+        }
     }
-    else
+    return true;
+}
+
+static void tokenize(TOKENIZER *self)
+{
+    register char *i = self->copy;
+    bool previous_char_inside_token = false;
+    const char *token;
+    while (*i)
     {
-        token =
-            strtok(self->current_token ? NULL : self->copy, self->delimiters);
+        bool this_char_inside_token = inside_token(i, self->delimiters);
+        if (!previous_char_inside_token && this_char_inside_token)
+        {
+            token = i;
+        }
+        else if (!this_char_inside_token && previous_char_inside_token)
+        {
+            *i = '\0';
+            stringlist_add(self->tokens, token);
+        }
+        ++i;
+        previous_char_inside_token = this_char_inside_token;
     }
-    self->current_token = token;
-    return token;
 }
 
 STRINGLIST *tokenizer_create_tokens(TOKENIZER *self, const char *original)
@@ -122,11 +142,7 @@ STRINGLIST *tokenizer_create_tokens(TOKENIZER *self, const char *original)
     self->current_token = NULL;
     remove_line_ending(self->copy);
     self->tokens = stringlist_new();
-    char *token;
-    while ((token = tokenizer_next(self)) != NULL)
-    {
-        stringlist_add(self->tokens, token);
-    }
+    tokenize(self);
     return self->tokens;
 }
 

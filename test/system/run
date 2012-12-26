@@ -1,0 +1,16 @@
+#!/bin/sh
+cd $(dirname $0)
+for i in $(find . -name "*.cmd" -print)
+do
+    base=$(basename $i .cmd)
+    need=$(. $i < ${base}.in | md5sum)
+    want=$(cat ${base}.out | md5sum)
+    if [ "${want}" != "${need}" ]
+    then
+        echo FAILURE: ${base}
+        cat ${base}.cmd
+        . $i < ${base}.in
+    else
+        echo SUCCESS: ${base}
+    fi
+done

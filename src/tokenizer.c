@@ -33,6 +33,7 @@ struct tokenizer_s
     bool allow_escape_characters;
     bool allow_double_quotes;
     const char *delimiters;
+    char escape_character;
     /*
      * These fields store internal state.
      */
@@ -47,6 +48,7 @@ TOKENIZER *tokenizer_new()
 {
     TOKENIZER *self = MALLOC(TOKENIZER);
     self->delimiters = " \t";
+    self->escape_character = '\\';
     self->allow_empty_tokens = false;
     self->trim_token = false;
     self->allow_escape_characters = false;
@@ -99,41 +101,68 @@ static void remove_line_ending(char *line)
     }
 }
 
-static inline bool inside_token(const char *string, const char *delimiters)
+static void remove_escape_character(char *string, char escape_character)
+{
+    char *find;
+    while((find = strchr(string, escape_character)) != NULL)
+    {
+        (void)memmove(find, find+1, strlen(find));
+        /* Handle double escape character by skipping forward */
+        if (find && *find == escape_character)
+        {
+            string = find + 1;
+        }
+    }
+}
+
+static inline bool delimiter(const char *string, const char *delimiters)
 {
     register const char *j = delimiters;
     while (*j)
     {
         if (*j++ == *string)
         {
-            return false;
+            return true;
         }
     }
-    return true;
+    return false;
 }
 
 static void tokenize(TOKENIZER *self)
 {
     register char *i = self->copy;
-    bool previous_char_inside_token = false;
-    const char *token = NULL;
+    bool currently_inside_token = false;
+    bool previous_char_escape = false;
+    char *token = NULL;
     while (*i)
     {
-        bool this_char_inside_token = inside_token(i, self->delimiters);
-        if (!previous_char_inside_token && this_char_inside_token)
+        bool is_delimiter = delimiter(i, self->delimiters);
+        if (is_delimiter && previous_char_escape)
         {
+            is_delimiter = false;
+        }
+        if (!currently_inside_token && !is_delimiter)
+        {
+            /* Entering a token */
             token = i;
         }
-        else if (!this_char_inside_token)
+        else if (is_delimiter)
         {
-            if (previous_char_inside_token || self->allow_empty_tokens)
+            if (currently_inside_token || self->allow_empty_tokens)
             {
+                /* Exiting a token */
                 *i = '\0';
+                if (self->allow_escape_characters)
+                {
+                    remove_escape_character(token, self->escape_character);
+                }
                 stringlist_add(self->tokens, token);
             }
         }
+        previous_char_escape = (*i == self->escape_character
+                                && !previous_char_escape);
+        currently_inside_token = !is_delimiter;
         ++i;
-        previous_char_inside_token = this_char_inside_token;
     }
 }
 

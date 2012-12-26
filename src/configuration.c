@@ -29,6 +29,7 @@ static char doc[] = "A field extraction utility";
 static struct argp_option options[] = {
     {"delimiters", 'd', "STRING", 0, "Characters used as input delimiters", 0},
     {"empty", 'e', 0, 0, "Allow empty fields", 0},
+    {"backslash", 'b', 0, 0, "Backslash escapes delimiters", 0},
     {"exclude", 'E', 0, 0, "List of strings to exclude from output separated by :", 0},
     {"file", 'f', "FILE", 0, "Read input from file instead of stdin", 0},
     {"separator", 's', "STRING", 0, "Separator used in output text", 0},
@@ -40,6 +41,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     CONFIGURATION *configuration = state->input;
     switch (key)
     {
+    case 'b':
+        configuration->backslash_escapes_delimiters = 1;
+        break;
     case 'd':
         configuration->delimiters = arg;
         break;
@@ -74,6 +78,7 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     CONFIGURATION *self = MALLOC(CONFIGURATION);
     self->delimiters = "\t ";
     self->allow_empty_tokens = 0;
+    self->backslash_escapes_delimiters = 0;
     self->fields = NULL;
     self->file = NULL;
     self->separator = " ";

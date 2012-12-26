@@ -139,6 +139,8 @@ int main(int argc, char **argv)
     CONFIGURATION *configuration = configuration_new(argc, argv);
     TOKENIZER *tokenizer = tokenizer_new();
     tokenizer_allow_empty_tokens(tokenizer, configuration->allow_empty_tokens);
+    tokenizer_allow_escape_characters(tokenizer,
+                                   configuration->backslash_escapes_delimiters);
     tokenizer_set_delimiters(tokenizer, configuration->delimiters);
     FILE *fp = open_input(configuration->file);
     process_stream(fp, configuration, tokenizer);

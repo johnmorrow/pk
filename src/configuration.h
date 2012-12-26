@@ -26,6 +26,7 @@ typedef struct configuration_s
     char *file;
     const char *separator;
     int allow_empty_tokens;
+    int backslash_escapes_delimiters;
 } CONFIGURATION;
 
 extern CONFIGURATION *configuration_new(int, char **);

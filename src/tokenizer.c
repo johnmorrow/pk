@@ -116,7 +116,7 @@ static void tokenize(TOKENIZER *self)
 {
     register char *i = self->copy;
     bool previous_char_inside_token = false;
-    const char *token;
+    const char *token = NULL;
     while (*i)
     {
         bool this_char_inside_token = inside_token(i, self->delimiters);
@@ -124,10 +124,13 @@ static void tokenize(TOKENIZER *self)
         {
             token = i;
         }
-        else if (!this_char_inside_token && previous_char_inside_token)
+        else if (!this_char_inside_token)
         {
-            *i = '\0';
-            stringlist_add(self->tokens, token);
+            if (previous_char_inside_token || self->allow_empty_tokens)
+            {
+                *i = '\0';
+                stringlist_add(self->tokens, token);
+            }
         }
         ++i;
         previous_char_inside_token = this_char_inside_token;

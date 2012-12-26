@@ -60,10 +60,11 @@ static struct field_request_s convert_str_to_field(const char *str)
     return retval;
 }
 
-static void print_fields(const STRINGLIST *tokens,
-                         const CONFIGURATION *configuration)
+static void print_fields(const STRINGLIST * tokens,
+                         const CONFIGURATION * configuration)
 {
     const char *str;
+    const char *token;
     long int token_index;
     int i = 0;
     while (configuration->fields[i])
@@ -77,14 +78,16 @@ static void print_fields(const STRINGLIST *tokens,
             break;
         case NUMBER:
             token_index = fr.number - 1;
-            if (token_index > ((long int)stringlist_size(tokens) - 1) || token_index < 0
-                || strcmp(stringlist_string(tokens, token_index), "") == 0)
+            if (token_index > ((long int)stringlist_size(tokens) - 1)
+                || token_index < 0
+                || (token = stringlist_string(tokens, token_index)) == NULL
+                || strcmp(token, "") == 0)
             {
                 str = "NULL";
             }
             else
             {
-                str = stringlist_string(tokens, token_index);
+                str = token;
             }
             break;
         }
@@ -99,7 +102,6 @@ static void print_fields(const STRINGLIST *tokens,
     }
     (void)puts("");
 }
-
 static void process_stream(FILE * stream,
                            const CONFIGURATION *configuration,
                            TOKENIZER * tokenizer)

@@ -27,6 +27,7 @@ extern ssize_t Getline(char **, size_t *, FILE *);
 extern int Asprintf(char **, const char *, ...);
 extern FILE *Fopen(const char *, const char *);
 extern char *Strdup(const char *);
+extern int Sscanf(const char *str, const char *format, ...);
 
 /* allocates a single object using malloc(). */
 #define MALLOC(type) ((type *)Malloc(sizeof(type)))

@@ -128,15 +128,25 @@ static inline bool delimiter(const char *string, const char *delimiters)
     return false;
 }
 
+static void token_add(TOKENIZER *self, char *token)
+{
+    if (self->allow_escape_characters)
+    {
+        remove_escape_character(token, self->escape_character);
+    }
+    stringlist_add(self->tokens, token);
+}
+
 static void tokenize(TOKENIZER *self)
 {
     register char *i = self->copy;
     bool currently_inside_token = false;
     bool previous_char_escape = false;
     char *token = NULL;
+    bool is_delimiter;
     while (*i)
     {
-        bool is_delimiter = delimiter(i, self->delimiters);
+        is_delimiter = delimiter(i, self->delimiters);
         if (is_delimiter && previous_char_escape)
         {
             is_delimiter = false;
@@ -152,17 +162,18 @@ static void tokenize(TOKENIZER *self)
             {
                 /* Exiting a token */
                 *i = '\0';
-                if (self->allow_escape_characters)
-                {
-                    remove_escape_character(token, self->escape_character);
-                }
-                stringlist_add(self->tokens, token);
+                token_add(self, token);
+                token = NULL;
             }
         }
         previous_char_escape = (*i == self->escape_character
                                 && !previous_char_escape);
         currently_inside_token = !is_delimiter;
         ++i;
+    }
+    if (token || self->allow_empty_tokens)
+    {
+        token_add(self, token);
     }
 }
 

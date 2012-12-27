@@ -15,19 +15,19 @@
  *
  */
 
-#ifndef STRINGLIST__H
-#define STRINGLIST__H
+#ifndef FREQUEST__H
+#define FREQUEST__H
 
 #include <stdbool.h>
 
-struct stringlist_s;
-typedef struct stringlist_s STRINGLIST;
+#include "stringlist.h"
 
-extern STRINGLIST *stringlist_new();
-extern void stringlist_delete(STRINGLIST *);
-extern void stringlist_add(STRINGLIST *, const char *);
-extern const char *stringlist_string(const STRINGLIST *, size_t);
-extern size_t stringlist_size(const STRINGLIST *);
-extern void stringlist_debug(const STRINGLIST *);
+struct frequest_s;
+typedef struct frequest_s FREQUEST;
+
+extern FREQUEST *frequest_new(int argc, char **argv);
+extern void frequest_delete(FREQUEST *);
+extern void frequest_print(const FREQUEST *, const STRINGLIST *tokens,
+                           const char *separator);
 
 #endif

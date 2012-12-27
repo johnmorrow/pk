@@ -106,3 +106,17 @@ char *Strdup(const char *s)
     }
     return copy;
 }
+
+int Sscanf(const char *str, const char *fmt, ...)
+{
+    va_list ap;
+    va_start(ap, fmt);
+    errno = 0;
+    int retval = vsscanf(str, fmt, ap);
+    va_end(ap);
+    if (retval != 0 && errno != 0)
+    {
+        error(EXIT_FAILURE, errno, "problem parsing input");
+    }
+    return retval;
+}

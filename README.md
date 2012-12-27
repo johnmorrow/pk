@@ -35,3 +35,14 @@ Change the output separator to create new file formats:
     root,1
     root,2
     root,3
+
+Ranges are also supported:
+
+    $ echo A B C D | ./src/fieldx 2-3
+    B C
+    $ echo A B C D | ./src/fieldx 2-
+    B C D
+    $ echo A B C D | ./src/fieldx -- -3  # careful, looks like a flag
+    A B C
+    $ echo A B C D | ./src/fieldx -
+    A B C D

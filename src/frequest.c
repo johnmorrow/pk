@@ -48,22 +48,21 @@ struct frequest_s
 
 static struct field_s *str_to_field(const char *str)
 {
-    char *tmp;
+    char *tmp1 = NULL;
+    char *tmp2 = NULL;
     struct field_s *retval = MALLOC(struct field_s);
     if (Sscanf(str, "%zu-%zu", &retval->range.start, &retval->range.finish) ==
         2)
     {
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu%a[-]", &retval->range.start, &tmp) == 2)
+    else if (Sscanf(str, "%zu%a[-]", &retval->range.start, &tmp1) == 2)
     {
-        free(tmp);
         retval->range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%a[-]%zu", &tmp, &retval->range.finish) == 2)
+    else if (Sscanf(str, "%a[-]%zu", &tmp2, &retval->range.finish) == 2)
     {
-        free(tmp);
         retval->range.start = 1;
         retval->which = RANGE;
     }
@@ -82,6 +81,14 @@ static struct field_s *str_to_field(const char *str)
         retval->string = str;
         retval->which = STRING;
     }
+    if (tmp1)
+    {
+        Free(tmp1);
+    }
+    if (tmp2)
+    {
+        Free(tmp2);
+    }
     return retval;
 }
 
@@ -99,6 +106,10 @@ FREQUEST *frequest_new(int argc, char **argv)
 
 void frequest_delete(FREQUEST *self)
 {
+    for (size_t i = 0; i < self->field_count; ++i)
+    {
+        Free(self->fields[i]);
+    }
     Free(self->fields);
     Free(self);
 }

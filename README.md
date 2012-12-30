@@ -38,11 +38,11 @@ Change the output separator to create new file formats:
 
 Ranges are also supported:
 
-    $ echo A B C D | ./src/fieldx 2-3
+    $ echo A B C D | fieldx 2-3
     B C
-    $ echo A B C D | ./src/fieldx 2-
+    $ echo A B C D | fieldx 2-
     B C D
-    $ echo A B C D | ./src/fieldx -- -3  # careful, looks like a flag
+    $ echo A B C D | fieldx -- -3  # careful, looks like a flag
     A B C
-    $ echo A B C D | ./src/fieldx -
+    $ echo A B C D | fieldx -
     A B C D

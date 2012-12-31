@@ -115,33 +115,41 @@ void frequest_delete(FREQUEST *self)
     Free(self);
 }
 
-static void output_string(const char *str, const char *separator, bool first)
+static bool output_string(const char *string, const char *separator, bool first)
 {
-    if (first)
+    bool printed = false;
+    if (string && *string != '\0')
     {
-        (void)printf("%s", str);
+        if (first)
+        {
+            (void)printf("%s", string);
+        }
+        else
+        {
+            (void)printf("%s%s", separator, string);
+        }
+        printed = true;
     }
-    else
-    {
-        (void)printf("%s%s", separator, str);
-    }
+    return printed;
 }
 
-static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
+static bool output_field(const FREQUEST *self, const STRINGLIST *tokens,
                          const char *separator, const char *empty_string,
                          size_t token_index, bool first )
 {
+    bool printed = false;
     const char *token;
     if (token_index >= stringlist_size(tokens)
         || (token = stringlist_string(tokens, token_index)) == NULL
         || strcmp(token, "") == 0)
     {
-        output_string(empty_string, separator, first);
+        printed = output_string(empty_string, separator, first);
     }
     else
     {
-        output_string(token, separator, first);
+        printed = output_string(token, separator, first);
     }
+    return printed;
 }
 
 void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
@@ -158,8 +166,10 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
         switch (f->which)
         {
         case STRING:
-            output_string(f->string, separator, first);
-            first = false;
+            if (output_string(f->string, separator, first))
+            {
+                first = false;
+            }
             break;
         case RANGE:
             range_index_start = Position_to_index(f->range.start);
@@ -173,15 +183,19 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
             }
             for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
-                output_field(self, tokens, separator, empty_string, i, first);
-                first = false;
+                if (output_field(self, tokens, separator, empty_string, i, first))
+                {
+                    first = false;
+                }
             }
             break;
         case NUMBER:
             token_index = Position_to_index(f->number);
-            output_field(self, tokens, separator, empty_string, token_index,
-                         first);
-            first = false;
+            if (output_field(self, tokens, separator, empty_string, token_index,
+                         first))
+            {
+                first = false;
+            }
             break;
         }
         field_index += 1;

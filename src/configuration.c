@@ -38,7 +38,7 @@ static struct argp_option options[] = {
         "Strings excluded from output (separated by :)", 0},
     {"file", 'f', "FILE", 0,
         "Read input from file instead of stdin", 0},
-    {"null", 'n', "STRING", 0,
+    {"null", 'n', "STRING", 1,
         "Change output text used for empty fields", 0},
     {"separator", 's', "STRING", 0,
         "Separator used in output text", 0},

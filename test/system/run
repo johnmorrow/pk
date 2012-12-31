@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/sh -e
 cd $(dirname $0)
-for i in $(find . -name "*.cmd" -print)
+for i in $(find . -name "*.cmd" -print | sort)
 do
     base=$(basename $i .cmd)
     need=$(. $i < ${base}.in | md5sum)

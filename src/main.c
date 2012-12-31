@@ -51,7 +51,7 @@ int main(int argc, char **argv)
     while (Getline(&line, &allocated_bytes, input) != -1)
     {
         STRINGLIST *tokens = tokenizer_create_tokens(tokenizer, line);
-        frequest_print(request, tokens, configuration->separator);
+        frequest_print(request, tokens, configuration->separator, configuration->empty_string);
         tokenizer_free_tokens(tokenizer);
     }
     Free(line);

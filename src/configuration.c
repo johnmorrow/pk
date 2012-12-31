@@ -28,16 +28,18 @@ static char args_doc[] = "[STRING...]";
 static char doc[] = "A field extraction utility";
 
 static struct argp_option options[] = {
+    {"backslash", 'b', 0, 0,
+        "Backslash escapes delimiters", 0},
     {"delimiters", 'd', "STRING", 0,
         "Characters used as input delimiters", 0},
     {"empty", 'e', 0, 0,
         "Allow empty fields", 0},
-    {"backslash", 'b', 0, 0,
-        "Backslash escapes delimiters", 0},
     {"excludes", 'E', "STRINGS", 1,
         "Strings excluded from output (separated by :)", 0},
     {"file", 'f', "FILE", 0,
         "Read input from file instead of stdin", 0},
+    {"null", 'n', "STRING", 0,
+        "Change output text used for empty fields", 0},
     {"separator", 's', "STRING", 0,
         "Separator used in output text", 0},
     {0, 0, 0, 0, 0, 0}
@@ -78,6 +80,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'f':
         configuration->file = arg;
         break;
+    case 'n':
+        configuration->empty_string = arg;
+        break;
     case 's':
         configuration->separator = arg;
         break;
@@ -97,12 +102,14 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     }
     return 0;
 }
+
 CONFIGURATION *configuration_new(int argc, char **argv)
 {
     CONFIGURATION *self = MALLOC(CONFIGURATION);
     self->delimiters = "\t ";
     self->allow_empty_tokens = 0;
     self->backslash_escapes_delimiters = 0;
+    self->empty_string = "NULL";
     self->fields = stringlist_new();
     self->file = NULL;
     self->excludes = make_excludes(getenv("FIELDX_EXCLUDES"));

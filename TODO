@@ -3,5 +3,6 @@
 * flag -p for preview of fields
 * flag -t trim before printing
 * flag -a only print alphanumerics
-* flag -n change NULL field string
 * check const on object methods
+* change frequest to fieldprinter
+* make some setters on fieldprinter

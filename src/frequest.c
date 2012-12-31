@@ -128,15 +128,15 @@ static void output_string(const char *str, const char *separator, bool first)
 }
 
 static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
-                         const char *separator, size_t token_index,
-                         bool first)
+                         const char *separator, const char *empty_string,
+                         size_t token_index, bool first )
 {
     const char *token;
     if (token_index >= stringlist_size(tokens)
         || (token = stringlist_string(tokens, token_index)) == NULL
         || strcmp(token, "") == 0)
     {
-        output_string("NULL", separator, first);
+        output_string(empty_string, separator, first);
     }
     else
     {
@@ -145,7 +145,7 @@ static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
 }
 
 void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
-                    const char *separator)
+                    const char *separator, const char *empty_string)
 {
     size_t range_index_start;
     size_t range_index_finish;
@@ -173,13 +173,14 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
             }
             for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
-                output_field(self, tokens, separator, i, first);
+                output_field(self, tokens, separator, empty_string, i, first);
                 first = false;
             }
             break;
         case NUMBER:
             token_index = Position_to_index(f->number);
-            output_field(self, tokens, separator, token_index, first);
+            output_field(self, tokens, separator, empty_string, token_index,
+                         first);
             first = false;
             break;
         }

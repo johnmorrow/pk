@@ -27,6 +27,7 @@ typedef struct frequest_s FREQUEST;
 
 extern FREQUEST *frequest_new(STRINGLIST *);
 extern void frequest_delete(FREQUEST *);
-extern void frequest_print(const FREQUEST *, const STRINGLIST *, const char *);
+extern void frequest_print(const FREQUEST *, const STRINGLIST *,
+                           const char *, const char *);
 
 #endif

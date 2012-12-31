@@ -30,6 +30,7 @@ typedef struct configuration_s
     const char *separator;
     int allow_empty_tokens;
     int backslash_escapes_delimiters;
+    const char *empty_string;
     /*
      * internal state
      */

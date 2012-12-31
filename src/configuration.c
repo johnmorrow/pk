@@ -34,7 +34,7 @@ static struct argp_option options[] = {
         "Allow empty fields", 0},
     {"backslash", 'b', 0, 0,
         "Backslash escapes delimiters", 0},
-    {"exclude", 'E', "STRINGS", 0,
+    {"excludes", 'E', "STRINGS", 1,
         "Strings excluded from output (separated by :)", 0},
     {"file", 'f', "FILE", 0,
         "Read input from file instead of stdin", 0},
@@ -43,10 +43,24 @@ static struct argp_option options[] = {
     {0, 0, 0, 0, 0, 0}
 };
 
+static STRINGLIST *make_excludes(const char *input)
+{
+    if (!input)
+    {
+        return NULL;
+    }
+    TOKENIZER *t = tokenizer_new();
+    tokenizer_set_delimiters(t, ":");
+    tokenizer_allow_escape_characters(t, true);
+    STRINGLIST *excludes = stringlist_copy(tokenizer_create_tokens(t, input));
+    tokenizer_free_tokens(t);
+    tokenizer_delete(t);
+    return excludes;
+}
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
     CONFIGURATION *configuration = state->input;
-    TOKENIZER *t;
     switch (key)
     {
     case 'b':
@@ -59,10 +73,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->allow_empty_tokens = 1;
         break;
     case 'E':
-        t = tokenizer_new();
-        tokenizer_set_delimiters(t, ":");
-        configuration->excludes = tokenizer_create_tokens(t, arg);
-        tokenizer_delete(t);
+        configuration->excludes = make_excludes(arg);
         break;
     case 'f':
         configuration->file = arg;
@@ -72,7 +83,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         break;
     case ARGP_KEY_NO_ARGS:
         argp_usage(state);
-        /*NOTREACHED*/
+         /*NOTREACHED*/
         break;
     case ARGP_KEY_ARG:
         for (int i = state->next - 1; i >= 0 && i < state->argc; ++i)
@@ -86,7 +97,6 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     }
     return 0;
 }
-
 CONFIGURATION *configuration_new(int argc, char **argv)
 {
     CONFIGURATION *self = MALLOC(CONFIGURATION);
@@ -95,7 +105,7 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     self->backslash_escapes_delimiters = 0;
     self->fields = stringlist_new();
     self->file = NULL;
-    self->excludes = NULL;
+    self->excludes = make_excludes(getenv("FIELDX_EXCLUDES"));
     self->separator = " ";
     struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
     argp_parse(&argp, argc, argv, 0, 0, self);
@@ -104,6 +114,10 @@ CONFIGURATION *configuration_new(int argc, char **argv)
 
 void configuration_delete(CONFIGURATION *self)
 {
+    if (self->excludes)
+    {
+        stringlist_delete(self->excludes);
+    }
     stringlist_delete(self->fields);
     Free(self);
 }

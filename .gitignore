@@ -40,3 +40,8 @@ Makefile.in
 /src/fieldx
 /stamp-h1
 /config.h
+
+# debugging stuff
+
+core
+vgcore.*

@@ -23,9 +23,10 @@
 
 struct stringlist_s
 {
-    const char **strings;
+    char **strings;
     size_t allocated;
     size_t used;
+    bool internal_allocation;
 };
 
 STRINGLIST *stringlist_new()
@@ -33,25 +34,64 @@ STRINGLIST *stringlist_new()
     STRINGLIST *self = MALLOC(STRINGLIST);
     self->allocated = 1;
     self->used = 0;
-    self->strings = MALLOC_ARRAY(self->allocated, const char *);
+    self->strings = MALLOC_ARRAY(self->allocated, char *);
+    self->internal_allocation = false;
     return self;
 }
 
 void stringlist_delete(STRINGLIST *self)
 {
+    if (self->internal_allocation)
+    {
+        for (size_t i = 0; i < self->used; ++i)
+        {
+            if (self->strings[i])
+            {
+                Free(self->strings[i]);
+            }
+        }
+    }
     Free(self->strings);
     Free(self);
 }
 
-void stringlist_add(STRINGLIST *self, const char *string)
+STRINGLIST *stringlist_copy(const STRINGLIST *self)
+{
+    STRINGLIST *copy = MALLOC(STRINGLIST);
+    copy->allocated = self->allocated;
+    copy->used = self->used;
+    copy->strings = MALLOC_ARRAY(copy->allocated, char *);
+    copy->internal_allocation = true;
+    for (size_t i = 0; i < self->used; ++i)
+    {
+        if (self->strings[i])
+        {
+            copy->strings[i] = Strdup(self->strings[i]); // Deep copy
+        }
+        else
+        {
+            copy->strings[i] = NULL;
+        }
+    }
+    return copy;
+}
+
+void stringlist_add(STRINGLIST *self, char *string)
 {
     if (self->used == self->allocated)
     {
         self->allocated *= 2;
         self->strings =
-            REALLOC_ARRAY(self->strings, self->allocated, const char *);
+            REALLOC_ARRAY(self->strings, self->allocated, char *);
     }
-    self->strings[self->used++] = string;
+    if (self->internal_allocation)
+    {
+        self->strings[self->used++] = Strdup(string);
+    }
+    else
+    {
+        self->strings[self->used++] = string;
+    }
 }
 
 const char *stringlist_string(const STRINGLIST *self, size_t index)

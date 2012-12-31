@@ -109,6 +109,10 @@ FILE *Fopen(const char *path, const char *mode)
 
 char *Strdup(const char *s)
 {
+    if (!s)
+    {
+        error(EXIT_FAILURE, 0, "null pointer passed to strdup");
+    }
     char *copy;
     errno = 0;
     copy = strdup(s);
@@ -131,4 +135,13 @@ int Sscanf(const char *str, const char *fmt, ...)
         error(EXIT_FAILURE, errno, "problem parsing input");
     }
     return retval;
+}
+
+size_t Position_to_index(size_t position)
+{
+    if (position == 0)
+    {
+        error(EXIT_FAILURE, 0, "offset bug detected");
+    }
+    return position - 1;
 }

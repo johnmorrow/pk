@@ -100,11 +100,11 @@ void tokenizer_set_excludes(TOKENIZER *self, const STRINGLIST *excludes)
 static void remove_line_ending(char *line)
 {
     const size_t length = strlen(line);
-    size_t index = length - 1;
-    while (line[index] == '\n' || line[index] == '\r')
+    size_t end_index = Position_to_index(length);
+    while (line[end_index] == '\n' || line[end_index] == '\r')
     {
-        line[index] = '\0';
-        index -= 1;
+        line[end_index] = '\0';
+        end_index -= 1;
     }
 }
 
@@ -154,11 +154,10 @@ static void token_add(TOKENIZER *self, char *token)
     }
     if (self->excludes)
     {
-        size_t last_token_index = stringlist_size(self->excludes) - 1;
-        for (size_t i = 0; i <= last_token_index; ++i)
+        size_t strings_to_exclude = stringlist_size(self->excludes);
+        for (size_t i = 0; i < strings_to_exclude; ++i)
         {
             remove_string(token, stringlist_string(self->excludes, i));
-
         }
     }
     stringlist_add(self->tokens, token);
@@ -208,9 +207,9 @@ STRINGLIST *tokenizer_create_tokens(TOKENIZER *self, const char *original)
 {
     self->original = original;
     self->copy = Strdup(original);
+    remove_line_ending(self->copy);
     self->strsep_ptr = self->copy;
     self->current_token = NULL;
-    remove_line_ending(self->copy);
     self->tokens = stringlist_new();
     tokenize(self);
     return self->tokens;

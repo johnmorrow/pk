@@ -29,11 +29,11 @@ struct field_s
     union
     {
         const char *string;
-        long int number;
+        size_t number;
         struct range_s
         {
-            long int start;
-            long int finish;
+            size_t start;
+            size_t finish;
         } range;
     };
     enum
@@ -128,12 +128,11 @@ static void output_string(const char *str, const char *separator, bool first)
 }
 
 static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
-                         const char *separator, long int token_index,
+                         const char *separator, size_t token_index,
                          bool first)
 {
     const char *token;
-    long int maximum_token_index = stringlist_size(tokens) - 1;
-    if (token_index > maximum_token_index || token_index < 0
+    if (token_index >= stringlist_size(tokens)
         || (token = stringlist_string(tokens, token_index)) == NULL
         || strcmp(token, "") == 0)
     {
@@ -148,9 +147,9 @@ static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
 void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
                     const char *separator)
 {
-    long int range_index_start;
-    long int range_index_finish;
-    long int token_index;
+    size_t range_index_start;
+    size_t range_index_finish;
+    size_t token_index;
     size_t field_index = 0;
     bool first = true;
     while (field_index < self->field_count)
@@ -163,20 +162,23 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
             first = false;
             break;
         case RANGE:
-            range_index_start = f->range.start - 1;
-            range_index_finish = f->range.finish - 1;
-            if (range_index_finish == -1)
+            range_index_start = Position_to_index(f->range.start);
+            if (f->range.finish == 0)
             {
-                range_index_finish = stringlist_size(tokens) - 1;
+                range_index_finish = Position_to_index(stringlist_size(tokens));
             }
-            for (long int i = range_index_start; i <= range_index_finish; i++)
+            else
+            {
+                range_index_finish = Position_to_index(f->range.finish);
+            }
+            for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
                 output_field(self, tokens, separator, i, first);
                 first = false;
             }
             break;
         case NUMBER:
-            token_index = f->number - 1;
+            token_index = Position_to_index(f->number);
             output_field(self, tokens, separator, token_index, first);
             first = false;
             break;

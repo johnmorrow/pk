@@ -19,6 +19,7 @@
 #define CONFIGURATION__H
 
 #include "stringlist.h"
+#include "tokenizer.h"
 
 typedef struct configuration_s
 {
@@ -29,6 +30,10 @@ typedef struct configuration_s
     const char *separator;
     int allow_empty_tokens;
     int backslash_escapes_delimiters;
+    /*
+     * internal state
+     */
+    TOKENIZER *tokenizer;
 } CONFIGURATION;
 
 extern CONFIGURATION *configuration_new(int, char **);

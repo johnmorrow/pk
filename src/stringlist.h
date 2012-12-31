@@ -25,7 +25,8 @@ typedef struct stringlist_s STRINGLIST;
 
 extern STRINGLIST *stringlist_new();
 extern void stringlist_delete(STRINGLIST *);
-extern void stringlist_add(STRINGLIST *, const char *);
+extern STRINGLIST *stringlist_copy(const STRINGLIST *);
+extern void stringlist_add(STRINGLIST *, char *);
 extern const char *stringlist_string(const STRINGLIST *, size_t);
 extern size_t stringlist_size(const STRINGLIST *);
 extern void stringlist_debug(const STRINGLIST *);

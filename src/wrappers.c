@@ -84,6 +84,18 @@ int Asprintf(char **strp, const char *fmt, ...)
     return retval;
 }
 
+int Fclose(FILE *fp)
+{
+    errno = 0;
+    int status = fclose(fp);
+    if (status == EOF)
+    {
+        error(EXIT_FAILURE, errno, "unable to fclose");
+    }
+    fp = NULL;
+    return status;
+}
+
 FILE *Fopen(const char *path, const char *mode)
 {
     errno = 0;

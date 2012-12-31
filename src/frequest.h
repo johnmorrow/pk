@@ -25,9 +25,8 @@
 struct frequest_s;
 typedef struct frequest_s FREQUEST;
 
-extern FREQUEST *frequest_new(int argc, char **argv);
+extern FREQUEST *frequest_new(STRINGLIST *);
 extern void frequest_delete(FREQUEST *);
-extern void frequest_print(const FREQUEST *, const STRINGLIST *tokens,
-                           const char *separator);
+extern void frequest_print(const FREQUEST *, const STRINGLIST *, const char *);
 
 #endif

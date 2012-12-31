@@ -34,6 +34,7 @@ extern void tokenizer_trim_token(TOKENIZER *, bool);
 extern void tokenizer_allow_escape_characters(TOKENIZER *, bool);
 extern void tokenizer_allow_double_quotes(TOKENIZER *, bool);
 extern void tokenizer_set_delimiters(TOKENIZER *, const char *);
+extern void tokenizer_set_excludes(TOKENIZER *, const STRINGLIST *);
 
 extern STRINGLIST *tokenizer_create_tokens(TOKENIZER *, const char *);
 extern void tokenizer_free_tokens(TOKENIZER *);

@@ -44,6 +44,7 @@ struct frequest_s
 {
     struct field_s **fields;
     size_t field_count;
+    const STRINGLIST *excludes;
 };
 
 static struct field_s *str_to_field(const char *str)
@@ -92,14 +93,14 @@ static struct field_s *str_to_field(const char *str)
     return retval;
 }
 
-FREQUEST *frequest_new(int argc, char **argv)
+FREQUEST *frequest_new(STRINGLIST *fields)
 {
     FREQUEST *self = MALLOC(FREQUEST);
-    self->field_count = argc;
+    self->field_count = stringlist_size(fields);
     self->fields = MALLOC_ARRAY(self->field_count, struct field_s *);
     for (size_t i = 0; i < self->field_count; ++i)
     {
-        self->fields[i] = str_to_field(argv[i]);
+        self->fields[i] = str_to_field(stringlist_string(fields, i));
     }
     return self;
 }
@@ -147,6 +148,8 @@ static void output_field(const FREQUEST *self, const STRINGLIST *tokens,
 void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
                     const char *separator)
 {
+    long int range_index_start;
+    long int range_index_finish;
     long int token_index;
     size_t field_index = 0;
     bool first = true;
@@ -160,11 +163,13 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
             first = false;
             break;
         case RANGE:
-            if (f->range.finish == 0)
+            range_index_start = f->range.start - 1;
+            range_index_finish = f->range.finish - 1;
+            if (range_index_finish == -1)
             {
-                f->range.finish = stringlist_size(tokens);
+                range_index_finish = stringlist_size(tokens) - 1;
             }
-            for (long int i = f->range.start - 1; i < f->range.finish; i++)
+            for (long int i = range_index_start; i <= range_index_finish; i++)
             {
                 output_field(self, tokens, separator, i, first);
                 first = false;

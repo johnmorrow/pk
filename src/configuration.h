@@ -18,11 +18,13 @@
 #ifndef CONFIGURATION__H
 #define CONFIGURATION__H
 
+#include "stringlist.h"
+
 typedef struct configuration_s
 {
     const char *delimiters;
-    char **exclude;
-    char **fields;
+    STRINGLIST *excludes;
+    STRINGLIST *fields;
     char *file;
     const char *separator;
     int allow_empty_tokens;

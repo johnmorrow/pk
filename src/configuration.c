@@ -19,26 +19,34 @@
 #include <stdlib.h>
 
 #include "configuration.h"
+#include "tokenizer.h"
 #include "wrappers.h"
 
-const char *argp_program_version = "fields 1.0";
-const char *argp_program_bug_address = "<bug-fields@amoeba.org>";
+const char *argp_program_version = "fieldx 1.0";
+const char *argp_program_bug_address = "<fieldx@amoeba.org>";
 static char args_doc[] = "[STRING...]";
 static char doc[] = "A field extraction utility";
 
 static struct argp_option options[] = {
-    {"delimiters", 'd', "STRING", 0, "Characters used as input delimiters", 0},
-    {"empty", 'e', 0, 0, "Allow empty fields", 0},
-    {"backslash", 'b', 0, 0, "Backslash escapes delimiters", 0},
-    {"exclude", 'E', 0, 0, "List of strings to exclude from output separated by :", 0},
-    {"file", 'f', "FILE", 0, "Read input from file instead of stdin", 0},
-    {"separator", 's', "STRING", 0, "Separator used in output text", 0},
+    {"delimiters", 'd', "STRING", 0,
+        "Characters used as input delimiters", 0},
+    {"empty", 'e', 0, 0,
+        "Allow empty fields", 0},
+    {"backslash", 'b', 0, 0,
+        "Backslash escapes delimiters", 0},
+    {"exclude", 'E', "STRINGS", 0,
+        "Strings excluded from output (separated by :)", 0},
+    {"file", 'f', "FILE", 0,
+        "Read input from file instead of stdin", 0},
+    {"separator", 's', "STRING", 0,
+        "Separator used in output text", 0},
     {0, 0, 0, 0, 0, 0}
 };
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
     CONFIGURATION *configuration = state->input;
+    TOKENIZER *t;
     switch (key)
     {
     case 'b':
@@ -51,7 +59,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->allow_empty_tokens = 1;
         break;
     case 'E':
-        configuration->exclude = NULL;
+        t = tokenizer_new();
+        tokenizer_set_delimiters(t, ":");
+        configuration->excludes = tokenizer_create_tokens(t, arg);
+        tokenizer_delete(t);
         break;
     case 'f':
         configuration->file = arg;
@@ -64,7 +75,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         /*NOTREACHED*/
         break;
     case ARGP_KEY_ARG:
-        configuration->fields = &state->argv[state->next - 1];
+        for (int i = state->next - 1; i >= 0 && i < state->argc; ++i)
+        {
+            stringlist_add(configuration->fields, state->argv[i]);
+        }
         state->next = state->argc;
         break;
     default:
@@ -79,8 +93,9 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     self->delimiters = "\t ";
     self->allow_empty_tokens = 0;
     self->backslash_escapes_delimiters = 0;
-    self->fields = NULL;
+    self->fields = stringlist_new();
     self->file = NULL;
+    self->excludes = NULL;
     self->separator = " ";
     struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
     argp_parse(&argp, argc, argv, 0, 0, self);
@@ -89,5 +104,6 @@ CONFIGURATION *configuration_new(int argc, char **argv)
 
 void configuration_delete(CONFIGURATION *self)
 {
+    stringlist_delete(self->fields);
     Free(self);
 }

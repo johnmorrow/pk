@@ -1,0 +1,8 @@
+* Allow -E to be empty
+* Update manpage for -E
+* Handle -E containing only :
+* Get excludes from environment
+* flag -0 for null separator
+* flag -p for preview of fields
+* flag -t trim before printing
+* flag -a only print alphanumerics

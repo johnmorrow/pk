@@ -25,6 +25,7 @@ extern void *Realloc(void *, size_t);
 extern void Free(void *);
 extern ssize_t Getline(char **, size_t *, FILE *);
 extern int Asprintf(char **, const char *, ...);
+extern int Fclose(FILE *);
 extern FILE *Fopen(const char *, const char *);
 extern char *Strdup(const char *);
 extern int Sscanf(const char *str, const char *format, ...);

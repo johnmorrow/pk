@@ -33,6 +33,7 @@ struct tokenizer_s
     bool allow_escape_characters;
     bool allow_double_quotes;
     const char *delimiters;
+    const STRINGLIST *excludes;
     char escape_character;
     /*
      * These fields store internal state.
@@ -53,6 +54,7 @@ TOKENIZER *tokenizer_new()
     self->trim_token = false;
     self->allow_escape_characters = false;
     self->allow_double_quotes = false;
+    self->excludes = NULL;
     self->original = NULL;
     self->copy = NULL;
     self->strsep_ptr = NULL;
@@ -90,6 +92,11 @@ void tokenizer_set_delimiters(TOKENIZER *self, const char *delimiters)
     self->delimiters = delimiters;
 }
 
+void tokenizer_set_excludes(TOKENIZER *self, const STRINGLIST *excludes)
+{
+    self->excludes = excludes;
+}
+
 static void remove_line_ending(char *line)
 {
     const size_t length = strlen(line);
@@ -101,16 +108,27 @@ static void remove_line_ending(char *line)
     }
 }
 
+static void remove_string(char *string, const char *remove)
+{
+    char *found;
+    size_t length_remove = strlen(remove);
+    while((found = strstr(string, remove)) != NULL)
+    {
+        size_t remaining = strlen(found + length_remove) + 1;
+        (void)memmove(found, found + length_remove, remaining);
+    }
+}
+
 static void remove_escape_character(char *string, char escape_character)
 {
-    char *find;
-    while((find = strchr(string, escape_character)) != NULL)
+    char *found;
+    while((found = strchr(string, escape_character)) != NULL)
     {
-        (void)memmove(find, find+1, strlen(find));
+        (void)memmove(found, found+1, strlen(found));
         /* Handle double escape character by skipping forward */
-        if (find && *find == escape_character)
+        if (found && *found == escape_character)
         {
-            string = find + 1;
+            string = found + 1;
         }
     }
 }
@@ -133,6 +151,15 @@ static void token_add(TOKENIZER *self, char *token)
     if (self->allow_escape_characters)
     {
         remove_escape_character(token, self->escape_character);
+    }
+    if (self->excludes)
+    {
+        size_t last_token_index = stringlist_size(self->excludes) - 1;
+        for (size_t i = 0; i <= last_token_index; ++i)
+        {
+            remove_string(token, stringlist_string(self->excludes, i));
+
+        }
     }
     stringlist_add(self->tokens, token);
 }

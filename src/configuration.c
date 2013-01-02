@@ -42,6 +42,8 @@ static struct argp_option options[] = {
         "Change output text used for empty fields", 0},
     {"separator", 's', "STRING", 0,
         "Separator used in output text", 0},
+    {"trim", 't', 0, 0,
+        "Trim non-alphanumerics characters before printing", 0},
     {0, 0, 0, 0, 0, 0}
 };
 
@@ -53,7 +55,7 @@ static STRINGLIST *make_excludes(const char *input)
     }
     TOKENIZER *t = tokenizer_new();
     tokenizer_set_delimiters(t, ":");
-    tokenizer_allow_escape_characters(t, true);
+    tokenizer_enable_escaped_delimiters(t, true);
     STRINGLIST *excludes = stringlist_copy(tokenizer_create_tokens(t, input));
     tokenizer_free_tokens(t);
     tokenizer_delete(t);
@@ -66,13 +68,13 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     switch (key)
     {
     case 'b':
-        configuration->backslash_escapes_delimiters = 1;
+        configuration->backslash_escapes_delimiters = true;
         break;
     case 'd':
         configuration->delimiters = arg;
         break;
     case 'e':
-        configuration->allow_empty_tokens = 1;
+        configuration->allow_empty_tokens = true;
         break;
     case 'E':
         configuration->excludes = make_excludes(arg);
@@ -85,6 +87,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         break;
     case 's':
         configuration->separator = arg;
+        break;
+    case 't':
+        configuration->trim_non_alphanumeric = true;
         break;
     case ARGP_KEY_NO_ARGS:
         argp_usage(state);
@@ -107,8 +112,9 @@ CONFIGURATION *configuration_new(int argc, char **argv)
 {
     CONFIGURATION *self = MALLOC(CONFIGURATION);
     self->delimiters = "\t ";
-    self->allow_empty_tokens = 0;
-    self->backslash_escapes_delimiters = 0;
+    self->allow_empty_tokens = false;
+    self->backslash_escapes_delimiters = false;
+    self->trim_non_alphanumeric = false;
     self->empty_string = "NULL";
     self->fields = stringlist_new();
     self->file = NULL;

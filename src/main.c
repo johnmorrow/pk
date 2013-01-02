@@ -40,9 +40,10 @@ int main(int argc, char **argv)
     setlinebuf(input);
     setlinebuf(stdout);
     TOKENIZER *tokenizer = tokenizer_new();
-    tokenizer_allow_empty_tokens(tokenizer, configuration->allow_empty_tokens);
-    tokenizer_allow_escape_characters(tokenizer,
+    tokenizer_enable_empty_tokens(tokenizer, configuration->allow_empty_tokens);
+    tokenizer_enable_escaped_delimiters(tokenizer,
                                    configuration->backslash_escapes_delimiters);
+    tokenizer_enable_trimming(tokenizer, configuration->trim_non_alphanumeric);
     tokenizer_set_delimiters(tokenizer, configuration->delimiters);
     tokenizer_set_excludes(tokenizer, configuration->excludes);
     FREQUEST *request = frequest_new(configuration->fields);

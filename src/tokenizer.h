@@ -29,10 +29,10 @@ typedef struct tokenizer_s TOKENIZER;
 extern TOKENIZER *tokenizer_new();
 extern void tokenizer_delete(TOKENIZER *);
 
-extern void tokenizer_allow_empty_tokens(TOKENIZER *, bool);
-extern void tokenizer_trim_token(TOKENIZER *, bool);
-extern void tokenizer_allow_escape_characters(TOKENIZER *, bool);
-extern void tokenizer_allow_double_quotes(TOKENIZER *, bool);
+extern void tokenizer_enable_empty_tokens(TOKENIZER *, bool);
+extern void tokenizer_enable_trimming(TOKENIZER *, bool);
+extern void tokenizer_enable_escaped_delimiters(TOKENIZER *, bool);
+extern void tokenizer_enable_double_quotes(TOKENIZER *, bool);
 extern void tokenizer_set_delimiters(TOKENIZER *, const char *);
 extern void tokenizer_set_excludes(TOKENIZER *, const STRINGLIST *);
 

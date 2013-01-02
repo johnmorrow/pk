@@ -67,24 +67,24 @@ void tokenizer_delete(TOKENIZER *self)
     Free(self);
 }
 
-void tokenizer_allow_empty_tokens(TOKENIZER *self, bool allow)
+void tokenizer_enable_empty_tokens(TOKENIZER *self, bool yesno)
 {
-    self->allow_empty_tokens = allow;
+    self->allow_empty_tokens = yesno;
 }
 
-void tokenizer_trim_token(TOKENIZER *self, bool yesno)
+void tokenizer_enable_trimming(TOKENIZER *self, bool yesno)
 {
     self->trim_token = yesno;
 }
 
-void tokenizer_allow_escape_characters(TOKENIZER *self, bool allow)
+void tokenizer_enable_escaped_delimiters(TOKENIZER *self, bool yesno)
 {
-    self->allow_escape_characters = allow;
+    self->allow_escape_characters = yesno;
 }
 
-void tokenizer_allow_double_quotes(TOKENIZER *self, bool allow)
+void tokenizer_enable_double_quotes(TOKENIZER *self, bool yesno)
 {
-    self->allow_double_quotes = allow;
+    self->allow_double_quotes = yesno;
 }
 
 void tokenizer_set_delimiters(TOKENIZER *self, const char *delimiters)

@@ -23,7 +23,8 @@
 #include "wrappers.h"
 
 const char *argp_program_version = "fieldx 1.0";
-const char *argp_program_bug_address = "<fieldx@amoeba.org>";
+const char *argp_program_bug_address =
+                "[ https://github.com/johnmorrow/fieldx/issues ]";
 static char args_doc[] = "[STRING...]";
 static char doc[] = "A field extraction utility";
 

@@ -1,3 +1,5 @@
+* allow escape characters in delimiter flags
+* handle newline escape character
 * Update manpage for -E
 * flag -0 for null separator
 * flag -p for preview of fields

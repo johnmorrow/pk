@@ -13,10 +13,13 @@ OPTIONS
 
 * `-d`, `--delimiters`=<STRING>:
   Use  all characters from STRING as field delimiters. The default
-  delimiter characters are <tab> and <space>
+  delimiter characters are <tab> and <space>.
 
 * `-e`, `--empty`:
-  Allow empty fields
+  Allow empty fields. Some file formats, for example passwd(5), allow
+  blank fields indicated by adjacent delimiter characters. In normal
+  operation fieldx treats adjacent delimiter characters as a single
+  logical delimiter, this flag reverses that behaviour.
 
 * `-E`, `--exclude`:
   List of strings to exclude from output separated by :
@@ -25,10 +28,12 @@ OPTIONS
   Read input from <FILE> instead of stdin
 
 * `-s`, `--separator`=<STRING>:
-  Separator used in output text
+  The specified STRING is printed between requested fields on stdout. 
+  If this flag is not set then fields are printed separated by a single
+  <space>.
 
 * `-?`, `--help`:
-  Give this help list
+  Displays a short help message.
 
 * `--usage`:
   Give a short usage message

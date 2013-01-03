@@ -1,7 +1,6 @@
 * Update manpage for -E
 * flag -0 for null separator
 * flag -p for preview of fields
-* flag -t trim non-alphanumerics before printing
 * check const on object methods
 * change frequest to fieldprinter
 * make some setters on fieldprinter

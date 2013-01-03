@@ -15,6 +15,7 @@
  *
  */
 
+#include <ctype.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -119,6 +120,25 @@ static void remove_string(char *string, const char *remove)
     }
 }
 
+static void trim_string(char *string)
+{
+    char *p;
+    for (p = string; *p && !isalnum(*p); ++p)
+        ;
+    if (*p && p != string)
+    {
+        memmove(string, p, strlen(p) + 1);
+    }
+    for (p = rindex(string, '\0'); p != string; --p)
+    {
+        if (isalnum(*p))
+        {
+            break;
+        }
+        *p = '\0';
+    }
+}
+
 static void remove_escape_character(char *string, char escape_character)
 {
     char *found;
@@ -159,6 +179,10 @@ static void token_add(TOKENIZER *self, char *token)
         {
             remove_string(token, stringlist_string(self->excludes, i));
         }
+    }
+    if (self->trim_token)
+    {
+        trim_string(token);
     }
     stringlist_add(self->tokens, token);
 }

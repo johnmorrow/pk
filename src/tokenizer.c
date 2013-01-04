@@ -109,6 +109,37 @@ static void remove_line_ending(char *line)
     }
 }
 
+/*
+static void *lmemcpy(void *dest, const void *src, size_t len)
+{
+  char *d = dest;
+  const char *s = src;
+  while (len--)
+      *d++ = *s++;
+  return dest;
+}
+
+static char *lmemmove(char *dst, char *src, int n)
+{
+    char *realdst = dst;
+    if (n <= 0)
+        return dst;
+    if (src >= dst+n || dst >= src+n)
+        return lmemcpy(dst, src, n);
+    if (src > dst) {
+        while (--n >= 0)
+            *dst++ = *src++;
+    }
+    else if (src < dst) {
+        src += n;
+        dst += n;
+        while (--n >= 0)
+            *--dst = *--src;
+    }
+    return realdst;
+}
+*/
+
 static void remove_string(char *string, const char *remove)
 {
     char *found;
@@ -127,7 +158,7 @@ static void trim_string(char *string)
         ;
     if (*p && p != string)
     {
-        memmove(string, p, strlen(p) + 1);
+        (void)memmove(string, p, strlen(p) + 1);
     }
     for (p = rindex(string, '\0'); p != string; --p)
     {
@@ -144,7 +175,8 @@ static void remove_escape_character(char *string, char escape_character)
     char *found;
     while((found = strchr(string, escape_character)) != NULL)
     {
-        (void)memmove(found, found+1, strlen(found));
+        size_t n = strlen(found);
+        (void)memmove(found, found+1, n);
         /* Handle double escape character by skipping forward */
         if (found && *found == escape_character)
         {

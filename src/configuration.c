@@ -15,12 +15,15 @@
  *
  */
 
-#include <argp.h>
+#include <string.h>
 #include <stdlib.h>
+
+#include <argp.h>
 
 #include "configuration.h"
 #include "tokenizer.h"
 #include "wrappers.h"
+
 
 const char *argp_program_version = "fieldx 1.0";
 const char *argp_program_bug_address =
@@ -63,6 +66,55 @@ static STRINGLIST *make_excludes(const char *input)
     return excludes;
 }
 
+static char *convert_escaped_delimiters(const char *input)
+{
+    char *output = Malloc(strlen(input) + 1);
+    bool escaped = false;
+    size_t op = 0;
+    for (size_t ip = 0; input[ip]; ++ip)
+    {
+        if (!escaped && input[ip] == '\\')
+        {
+            escaped = true;
+        }
+        else
+        {
+            if (escaped)
+            {
+                switch (input[ip])
+                {
+                case 't':
+                    output[op] = '\t';
+                    break;
+                case 'f':
+                    output[op] = '\f';
+                    break;
+                case 'n':
+                    output[op] = '\n';
+                    break;
+                case 'r':
+                    output[op] = '\r';
+                    break;
+                case 'v':
+                    output[op] = '\v';
+                    break;
+                default:
+                    output[op] = input[ip];
+                    break;
+                }
+            }
+            else
+            {
+                output[op] = input[ip];
+            }
+            op += 1;
+            escaped = false;
+        }
+    }
+    output[op] = '\0';
+    return output;
+}
+
 static error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
     CONFIGURATION *configuration = state->input;
@@ -72,7 +124,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->backslash_escapes_delimiters = true;
         break;
     case 'd':
-        configuration->delimiters = arg;
+        configuration->delimiters = convert_escaped_delimiters(arg);
         break;
     case 'e':
         configuration->allow_empty_tokens = true;
@@ -112,7 +164,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
 CONFIGURATION *configuration_new(int argc, char **argv)
 {
     CONFIGURATION *self = MALLOC(CONFIGURATION);
-    self->delimiters = "\t ";
+    self->delimiters = Strdup("\t ");
     self->allow_empty_tokens = false;
     self->backslash_escapes_delimiters = false;
     self->trim_non_alphanumeric = false;
@@ -133,5 +185,6 @@ void configuration_delete(CONFIGURATION *self)
         stringlist_delete(self->excludes);
     }
     stringlist_delete(self->fields);
+    Free(self->delimiters);
     Free(self);
 }

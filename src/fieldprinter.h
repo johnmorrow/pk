@@ -15,19 +15,18 @@
  *
  */
 
-#ifndef FREQUEST__H
-#define FREQUEST__H
+#ifndef FIELDPRINTER__H
+#define FIELDPRINTER__H
 
 #include <stdbool.h>
 
 #include "stringlist.h"
 
-struct frequest_s;
-typedef struct frequest_s FREQUEST;
+struct fieldprinter_s;
+typedef struct fieldprinter_s FIELDPRINTER;
 
-extern FREQUEST *frequest_new(STRINGLIST *);
-extern void frequest_delete(FREQUEST *);
-extern void frequest_print(const FREQUEST *, const STRINGLIST *,
-                           const char *, const char *);
+extern FIELDPRINTER *fieldprinter_new(STRINGLIST *, const char *, const char *);
+extern void fieldprinter_delete(FIELDPRINTER *);
+extern void fieldprinter_print(FIELDPRINTER *, const STRINGLIST *);
 
 #endif

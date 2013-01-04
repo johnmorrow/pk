@@ -23,7 +23,7 @@
 #include <string.h>
 
 #include "configuration.h"
-#include "frequest.h"
+#include "fieldprinter.h"
 #include "stringlist.h"
 #include "tokenizer.h"
 #include "wrappers.h"
@@ -46,18 +46,18 @@ int main(int argc, char **argv)
     tokenizer_enable_trimming(tokenizer, configuration->trim_non_alphanumeric);
     tokenizer_set_delimiters(tokenizer, configuration->delimiters);
     tokenizer_set_excludes(tokenizer, configuration->excludes);
-    FREQUEST *request = frequest_new(configuration->fields);
+    FIELDPRINTER *printer = fieldprinter_new(configuration->fields,
+            configuration->separator, configuration->empty_string);
     size_t allocated_bytes = 128;  // initial value can be modified by getline.
     char *line = MALLOC_ARRAY(allocated_bytes, char);
     while (Getline(&line, &allocated_bytes, input) != -1)
     {
         STRINGLIST *tokens = tokenizer_create_tokens(tokenizer, line);
-        frequest_print(request, tokens, configuration->separator,
-                       configuration->empty_string);
+        fieldprinter_print(printer, tokens);
         tokenizer_free_tokens(tokenizer);
     }
     Free(line);
-    frequest_delete(request);
+    fieldprinter_delete(printer);
     tokenizer_delete(tokenizer);
     Fclose(input);
     configuration_delete(configuration);

@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "frequest.h"
+#include "fieldprinter.h"
 #include "wrappers.h"
 
 struct field_s
@@ -40,11 +40,14 @@ struct field_s
     { NUMBER, STRING, RANGE } which;
 };
 
-struct frequest_s
+struct fieldprinter_s
 {
     struct field_s **fields;
     size_t field_count;
     const STRINGLIST *excludes;
+    const char *separator;
+    const char *empty_string;
+    bool at_start;
 };
 
 static struct field_s *str_to_field(const char *str)
@@ -93,19 +96,23 @@ static struct field_s *str_to_field(const char *str)
     return retval;
 }
 
-FREQUEST *frequest_new(STRINGLIST *fields)
+FIELDPRINTER *fieldprinter_new(STRINGLIST *fields, const char *separator,
+                               const char *empty_string)
 {
-    FREQUEST *self = MALLOC(FREQUEST);
+    FIELDPRINTER *self = MALLOC(FIELDPRINTER);
     self->field_count = stringlist_size(fields);
     self->fields = MALLOC_ARRAY(self->field_count, struct field_s *);
     for (size_t i = 0; i < self->field_count; ++i)
     {
         self->fields[i] = str_to_field(stringlist_string(fields, i));
     }
+    self->separator = separator;
+    self->empty_string = empty_string;
+    self->at_start = true;
     return self;
 }
 
-void frequest_delete(FREQUEST *self)
+void fieldprinter_delete(FIELDPRINTER *self)
 {
     for (size_t i = 0; i < self->field_count; ++i)
     {
@@ -115,61 +122,56 @@ void frequest_delete(FREQUEST *self)
     Free(self);
 }
 
-static bool output_string(const char *string, const char *separator, bool first)
+static void output_string(FIELDPRINTER *self, const char *string)
 {
-    bool printed = false;
-    if (string && *string != '\0')
+    if (string == NULL || *string == '\0')
     {
-        if (first)
+        string = self->empty_string;
+    }
+    if (string)
+    {
+        if (self->at_start)
         {
             (void)printf("%s", string);
+            self->at_start = false;
         }
         else
         {
-            (void)printf("%s%s", separator, string);
+            (void)printf("%s%s", self->separator, string);
         }
-        printed = true;
     }
-    return printed;
 }
 
-static bool output_field(const FREQUEST *self, const STRINGLIST *tokens,
-                         const char *separator, const char *empty_string,
-                         size_t token_index, bool first )
+static void output_field(FIELDPRINTER *self, const STRINGLIST *tokens,
+                         size_t token_index)
 {
-    bool printed = false;
     const char *token;
     if (token_index >= stringlist_size(tokens)
         || (token = stringlist_string(tokens, token_index)) == NULL
         || strcmp(token, "") == 0)
     {
-        printed = output_string(empty_string, separator, first);
+        output_string(self, NULL);
     }
     else
     {
-        printed = output_string(token, separator, first);
+        output_string(self, token);
     }
-    return printed;
 }
 
-void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
-                    const char *separator, const char *empty_string)
+void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
 {
     size_t range_index_start;
     size_t range_index_finish;
     size_t token_index;
     size_t field_index = 0;
-    bool first = true;
+    self->at_start = true;
     while (field_index < self->field_count)
     {
         struct field_s *f = self->fields[field_index];
         switch (f->which)
         {
         case STRING:
-            if (output_string(f->string, separator, first))
-            {
-                first = false;
-            }
+            output_string(self, f->string);
             break;
         case RANGE:
             range_index_start = Position_to_index(f->range.start);
@@ -183,19 +185,12 @@ void frequest_print(const FREQUEST *self, const STRINGLIST *tokens,
             }
             for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
-                if (output_field(self, tokens, separator, empty_string, i, first))
-                {
-                    first = false;
-                }
+                output_field(self, tokens, i);
             }
             break;
         case NUMBER:
             token_index = Position_to_index(f->number);
-            if (output_field(self, tokens, separator, empty_string, token_index,
-                         first))
-            {
-                first = false;
-            }
+            output_field(self, tokens, token_index);
             break;
         }
         field_index += 1;

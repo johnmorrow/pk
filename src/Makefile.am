@@ -5,5 +5,9 @@ AM_CFLAGS = -std=c99 -D_XOPEN_SOURCE=700 -D_BSD_SOURCE -D_GNU_SOURCE\
             -Wno-unused-parameter -Wno-missing-field-initializers
 
 bin_PROGRAMS = fieldx
-fieldx_SOURCES = main.c configuration.c frequest.c stringlist.c tokenizer.c wrappers.c
-noinst_HEADERS = configuration.h frequest.h stringlist.h tokenizer.h wrappers.h
+
+fieldx_SOURCES = main.c configuration.c fieldprinter.c stringlist.c\
+                 tokenizer.c wrappers.c
+
+noinst_HEADERS = configuration.h fieldprinter.h stringlist.h tokenizer.h\
+                 wrappers.h

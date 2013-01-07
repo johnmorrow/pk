@@ -1,5 +1,22 @@
 fieldx -- a field extraction utility
 
+#### Usage
+
+    Usage: fieldx [OPTION...] [STRING...]
+    A field extraction utility
+
+      -b, --backslash            Backslash escapes delimiters
+      -d, --delimiters=STRING    Characters used as input delimiters
+      -e, --empty                Allow empty fields
+      -E, --excludes[=STRINGS]   Strings excluded from output (separated by :)
+      -f, --file=FILE            Read input from file instead of stdin
+      -n, --null[=STRING]        Change output text used for empty fields
+      -s, --separator=STRING     Separator used in output text
+      -t, --trim                 Trim non-alphanumerics characters before printing
+      -?, --help                 Give this help list
+          --usage                Give a short usage message
+      -V, --version              Print program version
+
 #### Examples
 
 Select and rearrage output from column based commands:

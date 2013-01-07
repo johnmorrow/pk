@@ -1,9 +1,6 @@
-* allow escape characters in delimiter flags
 * handle newline escape character
 * Update manpage for -E
 * flag -0 for null separator
 * flag -p for preview of fields
 * check const on object methods
-* change frequest to fieldprinter
-* make some setters on fieldprinter
 * fix test runner path lookup issue

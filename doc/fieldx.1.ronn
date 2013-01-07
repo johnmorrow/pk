@@ -11,6 +11,11 @@ fieldx(1) -- a field extraction utility
 
 OPTIONS
 
+* `-b`, `--backslash`:
+  This flag is used to allow escaping of delimiters within the input.
+  If this flag is set then occurances of \<delimiter> within the input
+  text will not be counted as delimiting two fields.
+
 * `-d`, `--delimiters`=<STRING>:
   Use  all characters from STRING as field delimiters. The default
   delimiter characters are <tab> and <space>.
@@ -21,16 +26,27 @@ OPTIONS
   operation fieldx treats adjacent delimiter characters as a single
   logical delimiter, this flag reverses that behaviour.
 
-* `-E`, `--exclude`:
+* `-E`, `--excludes`[=<STRINGS>]:
   List of strings to exclude from output separated by :
 
 * `-f`, `--file`=<FILE>:
-  Read input from <FILE> instead of stdin
+  Read input from <FILE> instead of stdin.
 
 * `-s`, `--separator`=<STRING>:
   The specified STRING is printed between requested fields on stdout. 
   If this flag is not set then fields are printed separated by a single
   <space>.
+
+* `-n`, `--null`[=<STRING>]:
+  By default fields that have been directly requested but are empty will
+  be represented in the output by the string NULL. Using this flag causes
+  the string <STRING> to be used instead. Using this flag without an
+  arguments causes empty fields to be excluded from output without any
+  indication.
+
+* `-t`, `--trim`:
+  Trim non-alphanumerics characters from the beginning and end of each
+  field before printing.
 
 * `-?`, `--help`:
   Displays a short help message.
@@ -43,7 +59,7 @@ OPTIONS
 
 ## ENVIRONMENT
 
-* `FIELDX_EXCLUDE`:
+* `FIELDX_EXCLUDES`:
   This is a : separated list of strings to be removed from  fields
   before printing.  Overridden by the -E option.
 

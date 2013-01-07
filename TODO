@@ -1,6 +1,3 @@
 * handle newline escape character
 * Update manpage for -E
-* flag -0 for null separator
 * flag -p for preview of fields
-* check const on object methods
-* fix test runner path lookup issue

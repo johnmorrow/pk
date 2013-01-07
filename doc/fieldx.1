@@ -1,7 +1,7 @@
 .\" generated with Ronn/v0.7.3
 .\" http://github.com/rtomayko/ronn/tree/0.7.3
 .
-.TH "FIELDX" "1" "December 2012" "" ""
+.TH "FIELDX" "1" "January 2013" "" ""
 .
 .SH "NAME"
 \fBfieldx\fR \- a field extraction utility
@@ -18,28 +18,40 @@
 OPTIONS
 .
 .TP
+\fB\-b\fR, \fB\-\-backslash\fR
+This flag is used to allow escaping of delimiters within the input\. If this flag is set then occurances of <var>delimiter within the input text will not be counted as delimiting two fields\.
+.
+.TP
 \fB\-d\fR, \fB\-\-delimiters\fR=\fISTRING\fR
-Use all characters from STRING as field delimiters\. The default delimiter characters are \fItab\fR and \fIspace\fR
+Use all characters from STRING as field delimiters\. The default delimiter characters are \fItab\fR and \fIspace\fR\.
 .
 .TP
 \fB\-e\fR, \fB\-\-empty\fR
-Allow empty fields
+Allow empty fields\. Some file formats, for example passwd(5), allow blank fields indicated by adjacent delimiter characters\. In normal operation fieldx treats adjacent delimiter characters as a single logical delimiter, this flag reverses that behaviour\.
 .
 .TP
-\fB\-E\fR, \fB\-\-exclude\fR
+\fB\-E\fR, \fB\-\-excludes\fR[=\fISTRINGS\fR]
 List of strings to exclude from output separated by :
 .
 .TP
 \fB\-f\fR, \fB\-\-file\fR=\fIFILE\fR
-Read input from \fIFILE\fR instead of stdin
+Read input from \fIFILE\fR instead of stdin\.
 .
 .TP
 \fB\-s\fR, \fB\-\-separator\fR=\fISTRING\fR
-Separator used in output text
+The specified STRING is printed between requested fields on stdout\. If this flag is not set then fields are printed separated by a single \fIspace\fR\.
+.
+.TP
+\fB\-n\fR, \fB\-\-null\fR[=\fISTRING\fR]
+By default fields that have been directly requested but are empty will be represented in the output by the string NULL\. Using this flag causes the string \fISTRING\fR to be used instead\. Using this flag without an arguments causes empty fields to be excluded from output without any indication\.
+.
+.TP
+\fB\-t\fR, \fB\-\-trim\fR
+Trim non\-alphanumerics characters from the beginning and end of each field before printing\.
 .
 .TP
 \fB\-?\fR, \fB\-\-help\fR
-Give this help list
+Displays a short help message\.
 .
 .TP
 \fB\-\-usage\fR
@@ -52,7 +64,7 @@ Print program version
 .SH "ENVIRONMENT"
 .
 .TP
-\fBFIELDX_EXCLUDE\fR
+\fBFIELDX_EXCLUDES\fR
 This is a : separated list of strings to be removed from fields before printing\. Overridden by the \-E option\.
 .
 .SH "EXAMPLES"

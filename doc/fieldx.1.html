@@ -83,13 +83,28 @@
 <p>OPTIONS</p>
 
 <dl>
+<dt><code>-b</code>, <code>--backslash</code></dt><dd><p>This flag is used to allow escaping of delimiters within the input.
+If this flag is set then occurances of &lt;var>delimiter within the input
+text will not be counted as delimiting two fields.</p></dd>
 <dt><code>-d</code>, <code>--delimiters</code>=<var>STRING</var></dt><dd><p>Use  all characters from STRING as field delimiters. The default
-delimiter characters are <var>tab</var> and <var>space</var></p></dd>
-<dt><code>-e</code>, <code>--empty</code></dt><dd><p>Allow empty fields</p></dd>
-<dt><code>-E</code>, <code>--exclude</code></dt><dd><p>List of strings to exclude from output separated by :</p></dd>
-<dt><code>-f</code>, <code>--file</code>=<var>FILE</var></dt><dd><p>Read input from <var>FILE</var> instead of stdin</p></dd>
-<dt><code>-s</code>, <code>--separator</code>=<var>STRING</var></dt><dd><p>Separator used in output text</p></dd>
-<dt><code>-?</code>, <code>--help</code></dt><dd><p>Give this help list</p></dd>
+delimiter characters are <var>tab</var> and <var>space</var>.</p></dd>
+<dt><code>-e</code>, <code>--empty</code></dt><dd><p>Allow empty fields. Some file formats, for example <span class="man-ref">passwd<span class="s">(5)</span></span>, allow
+blank fields indicated by adjacent delimiter characters. In normal
+operation fieldx treats adjacent delimiter characters as a single
+logical delimiter, this flag reverses that behaviour.</p></dd>
+<dt><code>-E</code>, <code>--excludes</code>[=<var>STRINGS</var>]</dt><dd><p>List of strings to exclude from output separated by :</p></dd>
+<dt><code>-f</code>, <code>--file</code>=<var>FILE</var></dt><dd><p>Read input from <var>FILE</var> instead of stdin.</p></dd>
+<dt><code>-s</code>, <code>--separator</code>=<var>STRING</var></dt><dd><p>The specified STRING is printed between requested fields on stdout.
+If this flag is not set then fields are printed separated by a single
+<var>space</var>.</p></dd>
+<dt><code>-n</code>, <code>--null</code>[=<var>STRING</var>]</dt><dd><p>By default fields that have been directly requested but are empty will
+be represented in the output by the string NULL. Using this flag causes
+the string <var>STRING</var> to be used instead. Using this flag without an
+arguments causes empty fields to be excluded from output without any
+indication.</p></dd>
+<dt><code>-t</code>, <code>--trim</code></dt><dd><p>Trim non-alphanumerics characters from the beginning and end of each
+field before printing.</p></dd>
+<dt><code>-?</code>, <code>--help</code></dt><dd><p>Displays a short help message.</p></dd>
 <dt class="flush"><code>--usage</code></dt><dd><p>Give a short usage message</p></dd>
 <dt><code>-V</code>, <code>--version</code></dt><dd><p>Print program version</p></dd>
 </dl>
@@ -98,7 +113,7 @@ delimiter characters are <var>tab</var> and <var>space</var></p></dd>
 <h2 id="ENVIRONMENT">ENVIRONMENT</h2>
 
 <dl>
-<dt><code>FIELDX_EXCLUDE</code></dt><dd>This is a : separated list of strings to be removed from  fields
+<dt><code>FIELDX_EXCLUDES</code></dt><dd>This is a : separated list of strings to be removed from  fields
 before printing.  Overridden by the -E option.</dd>
 </dl>
 
@@ -150,7 +165,7 @@ root,3
 
   <ol class='man-decor man-foot man foot'>
     <li class='tl'></li>
-    <li class='tc'>December 2012</li>
+    <li class='tc'>January 2013</li>
     <li class='tr'>fieldx(1)</li>
   </ol>
 

@@ -40,6 +40,10 @@ Makefile.in
 /stamp-h1
 /config.h
 
+# backups
+
+*~
+
 # debugging stuff
 
 core

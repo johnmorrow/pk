@@ -38,15 +38,15 @@ List of strings to exclude from output separated by :
 Read input from \fIFILE\fR instead of stdin\.
 .
 .TP
-\fB\-s\fR, \fB\-\-separator\fR=\fISTRING\fR
+\fB\-S\fR, \fB\-\-separator\fR=\fISTRING\fR
 The specified STRING is printed between requested fields on stdout\. If this flag is not set then fields are printed separated by a single \fIspace\fR\.
 .
 .TP
-\fB\-n\fR, \fB\-\-null\fR[=\fISTRING\fR]
+\fB\-N\fR, \fB\-\-null\fR[=\fISTRING\fR]
 By default fields that have been directly requested but are empty will be represented in the output by the string NULL\. Using this flag causes the string \fISTRING\fR to be used instead\. Using this flag without an arguments causes empty fields to be excluded from output without any indication\.
 .
 .TP
-\fB\-t\fR, \fB\-\-trim\fR
+\fB\-T\fR, \fB\-\-trim\fR
 Trim non\-alphanumerics characters from the beginning and end of each field before printing\.
 .
 .TP
@@ -61,14 +61,8 @@ Give a short usage message
 \fB\-V\fR, \fB\-\-version\fR
 Print program version
 .
-.SH "ENVIRONMENT"
-.
-.TP
-\fBFIELDX_EXCLUDES\fR
-This is a : separated list of strings to be removed from fields before printing\. Overridden by the \-E option\.
-.
-.SH "EXAMPLES"
-Select and rearrage output from column based commands:
+.SH "BASICS"
+Select and rearrange output from column based commands:
 .
 .IP "" 4
 .
@@ -103,7 +97,44 @@ apparmor/ is owned by root
 .IP "" 0
 .
 .P
-Fixed formats, such as /etc/passwd, can have different delimiters and possibly contain empty fields:
+Ranges are also supported:
+.
+.IP "" 4
+.
+.nf
+
+$ echo A B C D | fieldx 2\-3
+B C
+$ echo A B C D | fieldx 2\-
+B C D
+$ echo A B C D | fieldx \-\- \-3  # careful, looks like a flag
+A B C
+$ echo A B C D | fieldx \-
+A B C D
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Change the output separator to create new file formats:
+.
+.IP "" 4
+.
+.nf
+
+$ ps aux | fieldx \-S, 1 2 | head
+USER,PID
+root,1
+root,2
+root,3
+.
+.fi
+.
+.IP "" 0
+.
+.SH "FIXED FORMAT FILES"
+Fixed formats, such as \fI/etc/passwd\fR, can have different delimiters and possibly contain empty fields:
 .
 .IP "" 4
 .
@@ -119,22 +150,123 @@ sys /bin/sh
 .
 .IP "" 0
 .
-.P
-Change the output separator to create new file formats:
+.SH "TRIMMING"
+The \fI\-T\fR flags trims non\-alphanumeric characters from the left and right side before printing the field to stdout\. This is useful removing quotes, parentheses or other visual delineations\.
 .
 .IP "" 4
 .
 .nf
 
-$ ps aux | fieldx \-s, 1 2 | head
-USER,PID
-root,1
-root,2
-root,3
+$ echo "\'Example User\' <foobar@example\.com>" | fieldx \-T 3
+foobar@example\.com
 .
 .fi
 .
 .IP "" 0
+.
+.SH "QUOTING"
+Quoting is supported\. Double quote is the default quote character:
+.
+.IP "" 4
+.
+.nf
+
+$ cat input
+"Bilbo Baggins", "The Hobbit"
+"Frodo Baggins", "The Lord of the Rings"
+$ fieldx \-f input \-d", " \-q 2
+"The Hobbit"
+"The Lord of the Rings"
+.
+.fi
+.
+.IP "" 0
+.
+.P
+The quote character can be specified\.
+.
+.IP "" 4
+.
+.nf
+
+$ cat input
+\'Bilbo Baggins\', \'The Hobbit\'
+\'Frodo Baggins\', \'The Lord of the Rings\'
+$ fieldx \-f input \-d", " \-q"\'" 1
+\'Bilbo Baggins\'
+\'Frodo Baggins\'
+.
+.fi
+.
+.IP "" 0
+.
+.P
+A two character argument supplied to the quote flag are used as start and end:
+.
+.IP "" 4
+.
+.nf
+
+$ cat input
+(Bilbo Baggins) (The Hobbit)
+(Frodo Baggins) (The Lord of the Rings)
+$ fieldx \-f input \-q"()" 1
+(Bilbo Baggins)
+(Frodo Baggins)
+$ fieldx \-f input \-q"()" \-T 1
+Bilbo Baggins
+Frodo Baggins
+.
+.fi
+.
+.IP "" 0
+.
+.SH "EXCLUDES"
+A list of strings that will always be excluded from the output can be supplied to fieldx via the \fI\-E\fR flag\. An example use case for this is when dealing with lists of servers you may want to automatically strip fully qualified hostnames down to their local names before passing on to another process in the pipeline\.
+.
+.IP "" 4
+.
+.nf
+
+$ cat input
+foo\.example\.com 192\.168\.1\.1 active
+bar\.example\.com 192\.168\.1\.2 repair
+baz\.example\.net 192\.168\.1\.3 active
+$ cat input | fieldx \-E\.example\.com:\.example\.net 1 3
+foo active
+bar repair
+baz active
+.
+.fi
+.
+.IP "" 0
+.
+.P
+Alternatively, as this is likely to be a regular request, it can be set using an environment variable\. When using the environment variable the \fI\-E\fR flag without arguments can be used to ignore the setting\. The \fI\-E\fR flag used with arguments will override the environment variable\.
+.
+.IP "" 4
+.
+.nf
+
+$ export FIELDX_EXCLUDES=\.example\.com:\.example\.net
+$ cat input | fieldx 1 3
+foo active
+bar repair
+baz active
+$ cat input | fieldx \-E 1 3
+foo\.example\.com active
+bar\.example\.com repair
+baz\.example\.net active
+.
+.fi
+.
+.IP "" 0
+.
+.SH "ENVIRONMENT"
+.
+.TP
+\fBFIELDX_EXCLUDES\fR
+This is a : separated list of strings to be removed from fields before printing\. Overridden by the \-E option\.
 .
 .SH "SEE ALSO"
 awk(1), cut(1)

@@ -90,23 +90,23 @@ apparmor/ is owned by root
 
 #### Changing the delimiters
 
-In its default mode of operation _fieldx_ uses both _<tab>_ and
-_<space>_ as delimiter characters. Additionally, multiple delimiters
+In its default mode of operation _fieldx_ uses both `<tab>` and
+`<space>` as delimiter characters. Additionally, multiple delimiters
 appearing next to each other in the input stream are treated as
 a single delimiter. This makes it good for parsing input streams
 where the columns are separated by varying amounts of whitespace.
 Many system tools such as _ps_, _df_, _last_, etc. use this kind
 of output.
 
-By using the _-d_ flag you can change the set of delimiters. Note
-that the string argument to _-d_ contains a set of characters, each
+By using the __-d__ flag you can change the set of delimiters. Note
+that the string argument to __-d__ contains a set of characters, each
 of which is a delimiter. This is a not a fixed string that separates
 each field.
 
 #### The output separator
 
 By default the field specified for printed will be outputed separated
-by single spaces. Use the _-S_ flag to change the string that separates
+by single spaces. Use the __-S__ flag to change the string that separates
 output fields:
 
 ```shell
@@ -120,7 +120,7 @@ root,3
 #### Fixed format files
 
 Fixed formats, such as */etc/passwd*, can have different delimiters and
-possibly contain empty fields. Using the _-e_ flag tells _fieldx_ that
+possibly contain empty fields. Using the __-e__ flag tells _fieldx_ that
 adjacent delimiter characters in the input line represent empty fields.
 
 ```shell
@@ -134,7 +134,7 @@ sys /bin/sh
 #### Empty fields
 
 If you tell _fieldx_ to print an empty field it will print out the string
-*NULL* by default. This can be set to another string using the _-N_ flag.
+*NULL* by default. This can be set to another string using the __-N__ flag.
 If this flag is used without an argument then empty fields are not printed.
 
 Note that _fieldx_ will not print trailing empty fields unless you specify
@@ -143,7 +143,7 @@ if specified as a range.
 
 #### Trimming non-alphanumeric fields
 
-The *-T* flags trims non-alphanumeric characters from the left and right side
+The __-T__ flags trims non-alphanumeric characters from the left and right side
 before printing the field to stdout. This is useful removing quotes,
 parentheses or other visual delineations.
 
@@ -160,7 +160,7 @@ quote character or a pair (start and end) of characters. Nested
 quotes or multiple types of quoting on the same line are not
 supported.
 
-Use the _-q_ flag to enable quoting support. Double quote is the
+Use the __-q__ flag to enable quoting support. Double quote is the
 default quote character:
 
 ```shell
@@ -173,7 +173,7 @@ $ fieldx -f input -d", " -q 2
 ```
 
 The quote character can be changed by supplying a one character
-argument to the _-q_ flag:
+argument to the __-q__ flag:
 
 ```shell
 $ cat input
@@ -184,7 +184,7 @@ $ fieldx -f input -d", " -q"'" 1
 'Frodo Baggins'
 ```
 
-A two character argument supplied to the _-q_ flag is used to
+A two character argument supplied to the __-q__ flag is used to
 specify the open and close quote characters:
 
 ```shell
@@ -202,7 +202,7 @@ Frodo Baggins
 #### Excludes
 
 A list of strings that will always be excluded from the output can be supplied
-to fieldx via the *-E* flag. An example use case for this is when dealing with
+to fieldx via the __-E__ flag. An example use case for this is when dealing with
 lists of servers you may want to automatically strip fully qualified hostnames
 down to their local names before passing on to another process in the pipeline.
 
@@ -218,8 +218,8 @@ baz active
 ```
 
 Alternatively, as this is likely to be a regular request, it can be set using an
-environment variable. When using the environment variable the *-E* flag without
-arguments can be used to ignore the setting. The *-E* flag used with arguments
+environment variable. When using the environment variable the __-E__ flag without
+arguments can be used to ignore the setting. The __-E__ flag used with arguments
 will override the environment variable.
 
 ```shell

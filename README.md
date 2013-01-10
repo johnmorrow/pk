@@ -1,5 +1,10 @@
 # fieldx -- a field extraction utility
 
+Do you use lots of shell pipelines and find yourself choosing between using _cut_
+or _awk_ to select columns from input? _fieldx_ is designed as a middle-ground
+tool; flexible enough to handle variable numbers of delimiters, fixed format
+files, quoted or escaped delimiters and more.
+
 Usage
 -----
 
@@ -124,12 +129,47 @@ A two character argument supplied to the quote flag are used as start and end:
 $ cat input
 (Bilbo Baggins) (The Hobbit)
 (Frodo Baggins) (The Lord of the Rings)
-$ fieldx -f input -d", " -q"()" 1
+$ fieldx -f input -q"()" 1
 (Bilbo Baggins)
 (Frodo Baggins)
-$ fieldx -f input -d", " -q"()" -t 1
+$ fieldx -f input -q"()" -t 1
 Bilbo Baggins
 Frodo Baggins
+```
+
+#### Excludes
+
+A list of strings that will always be excluded from the output can be supplied
+to fieldx via the _-E_ flag. An example use case for this is when dealing with
+lists of servers you may want to automatically strip fully qualified hostnames
+down to their local names before passing on to another process in the pipeline.
+
+```shell
+$ cat input
+foo.example.com 192.168.1.1 active
+bar.example.com 192.168.1.2 repair
+baz.example.net 192.168.1.3 active
+$ cat input | fieldx -E.example.com:.example.net 1 3
+foo active
+bar repair
+baz active
+```
+
+Alternatively, as this is likely to be a regular request, it can be set using an
+environment variable. When using the environment variable the _-E_ flag without
+arguments can be used to ignore the setting. The _-E_ flag used with arguments
+will override the environment variable.
+
+```shell
+$ export FIELDX_EXCLUDES=.example.com:.example.net
+$ cat input | fieldx 1 3
+foo active
+bar repair
+baz active
+$ cat input | fieldx -E 1 3
+foo.example.com active
+bar.example.com repair
+baz.example.net active
 ```
 
 Licensing

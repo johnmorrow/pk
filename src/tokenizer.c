@@ -32,7 +32,7 @@ struct tokenizer_s
     bool allow_empty_tokens;
     bool trim_token;
     bool allow_escape_characters;
-    bool allow_double_quotes;
+    bool allow_quotes;
     const char *delimiters;
     const STRINGLIST *excludes;
     char escape_character;
@@ -44,6 +44,8 @@ struct tokenizer_s
     char *strsep_ptr;
     STRINGLIST *tokens;
     char *current_token;
+    char quote_open;
+    char quote_close;
 };
 
 TOKENIZER *tokenizer_new()
@@ -54,12 +56,14 @@ TOKENIZER *tokenizer_new()
     self->allow_empty_tokens = false;
     self->trim_token = false;
     self->allow_escape_characters = false;
-    self->allow_double_quotes = false;
+    self->allow_quotes = false;
     self->excludes = NULL;
     self->original = NULL;
     self->copy = NULL;
     self->strsep_ptr = NULL;
     self->current_token = NULL;
+    self->quote_open = '\'';
+    self->quote_close = '\'';
     return self;
 }
 
@@ -83,9 +87,11 @@ void tokenizer_enable_escaped_delimiters(TOKENIZER *self, bool yesno)
     self->allow_escape_characters = yesno;
 }
 
-void tokenizer_enable_double_quotes(TOKENIZER *self, bool yesno)
+void tokenizer_set_quotes(TOKENIZER *self, char quote_open, char quote_close)
 {
-    self->allow_double_quotes = yesno;
+    self->allow_quotes = true;
+    self->quote_open = quote_open;
+    self->quote_close = quote_close;
 }
 
 void tokenizer_set_delimiters(TOKENIZER *self, const char *delimiters)
@@ -108,37 +114,6 @@ static void remove_line_ending(char *line)
         end_index -= 1;
     }
 }
-
-/*
-static void *lmemcpy(void *dest, const void *src, size_t len)
-{
-  char *d = dest;
-  const char *s = src;
-  while (len--)
-      *d++ = *s++;
-  return dest;
-}
-
-static char *lmemmove(char *dst, char *src, int n)
-{
-    char *realdst = dst;
-    if (n <= 0)
-        return dst;
-    if (src >= dst+n || dst >= src+n)
-        return lmemcpy(dst, src, n);
-    if (src > dst) {
-        while (--n >= 0)
-            *dst++ = *src++;
-    }
-    else if (src < dst) {
-        src += n;
-        dst += n;
-        while (--n >= 0)
-            *--dst = *--src;
-    }
-    return realdst;
-}
-*/
 
 static void remove_string(char *string, const char *remove)
 {
@@ -222,25 +197,26 @@ static void token_add(TOKENIZER *self, char *token)
 static void tokenize(TOKENIZER *self)
 {
     register char *i = self->copy;
-    bool currently_inside_token = false;
+    bool inside_token = false;
+    bool inside_quote = false;
     bool previous_char_escape = false;
     char *token = NULL;
     bool is_delimiter;
     while (*i)
     {
         is_delimiter = delimiter(i, self->delimiters);
-        if (is_delimiter && previous_char_escape)
+        if (is_delimiter && (previous_char_escape || inside_quote))
         {
             is_delimiter = false;
         }
-        if (!currently_inside_token && !is_delimiter)
+        if (!inside_token && !is_delimiter)
         {
             /* Entering a token */
             token = i;
         }
         else if (is_delimiter)
         {
-            if (currently_inside_token || self->allow_empty_tokens)
+            if (inside_token || self->allow_empty_tokens)
             {
                 /* Exiting a token */
                 *i = '\0';
@@ -250,7 +226,15 @@ static void tokenize(TOKENIZER *self)
         }
         previous_char_escape = (*i == self->escape_character
                                 && !previous_char_escape);
-        currently_inside_token = !is_delimiter;
+        inside_token = !is_delimiter;
+        if (inside_token && !inside_quote && *i == self->quote_open)
+        {
+            inside_quote = true;
+        }
+        else if (inside_token && inside_quote && *i == self->quote_close)
+        {
+            inside_quote = false;
+        }
         ++i;
     }
     if (token || self->allow_empty_tokens)

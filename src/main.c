@@ -40,15 +40,23 @@ int main(int argc, char **argv)
     setlinebuf(input);
     setlinebuf(stdout);
     TOKENIZER *tokenizer = tokenizer_new();
-    tokenizer_enable_empty_tokens(tokenizer, configuration->allow_empty_tokens);
+    tokenizer_enable_empty_tokens(tokenizer,
+                                  configuration->allow_empty_tokens);
     tokenizer_enable_escaped_delimiters(tokenizer,
-                                   configuration->backslash_escapes_delimiters);
+                                  configuration->backslash_escapes_delimiters);
     tokenizer_enable_trimming(tokenizer, configuration->trim_non_alphanumeric);
+    if (configuration->ignore_quoted_delimiters)
+    {
+        tokenizer_set_quotes(tokenizer, configuration->quote_open,
+                configuration->quote_close);
+    }
     tokenizer_set_delimiters(tokenizer, configuration->delimiters);
     tokenizer_set_excludes(tokenizer, configuration->excludes);
     FIELDPRINTER *printer = fieldprinter_new(configuration->fields,
-            configuration->separator, configuration->empty_string);
-    size_t allocated_bytes = 128;  // initial value can be modified by getline.
+                                             configuration->separator,
+                                             configuration->empty_string);
+    size_t allocated_bytes = 128;   // initial value can be modified by
+                                    // getline.
     char *line = MALLOC_ARRAY(allocated_bytes, char);
     while (Getline(&line, &allocated_bytes, input) != -1)
     {

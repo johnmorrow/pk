@@ -11,6 +11,7 @@ fieldx -- a field extraction utility
       -E, --excludes[=STRINGS]   Strings excluded from output (separated by :)
       -f, --file=FILE            Read input from file instead of stdin
       -n, --null[=STRING]        Change output text used for empty fields
+      -q, --quotes[=STRING]      Ignore delimiters within quotes
       -s, --separator=STRING     Separator used in output text
       -t, --trim                 Trim non-alphanumerics characters before printing
       -?, --help                 Give this help list
@@ -63,3 +64,48 @@ Ranges are also supported:
     A B C
     $ echo A B C D | fieldx -
     A B C D
+
+The -t flags trims non-alphanumeric characters from the left and right side
+before printing the field to stdout. This is useful removing quotes,
+parentheses or other visual delineations.
+
+    $ echo "'Example User' <foobar@example.com>" | fieldx -t 3
+    foobar@example.com
+
+Quoting is supported. Double quote is the default quote character:
+
+    $ cat input
+    "Bilbo Baggins", "The Hobbit"
+    "Frodo Baggins", "The Lord of the Rings"
+    $ fieldx -f input -d", " -q 2
+    "The Hobbit"
+    "The Lord of the Rings"
+
+The quote character can be specified. 
+
+    $ cat input
+    'Bilbo Baggins', 'The Hobbit'
+    'Frodo Baggins', 'The Lord of the Rings'
+    $ fieldx -f input -d", " -q"'" 1
+    'Bilbo Baggins'
+    'Frodo Baggins'
+
+A two character argument supplied to the quote flag are used as start and end:
+
+    $ cat input
+    (Bilbo Baggins) (The Hobbit)
+    (Frodo Baggins) (The Lord of the Rings)
+    $ fieldx -f input -d", " -q"()" 1
+    (Bilbo Baggins)
+    (Frodo Baggins)
+    $ fieldx -f input -d", " -q"()" -t 1
+    Bilbo Baggins
+    Frodo Baggins
+
+
+Disclaimer
+----------
+
+I am providing code in this repository to you under an open source license.
+Because this is my personal repository, the license you receive to my code
+is from me and not my employer (Facebook).

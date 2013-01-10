@@ -44,6 +44,8 @@ static struct argp_option options[] = {
         "Read input from file instead of stdin", 0},
     {"null", 'n', "STRING", 1,
         "Change output text used for empty fields", 0},
+    {"quotes", 'q', "STRING", 1,
+        "Ignore delimiters within quotes", 0},
     {"separator", 's', "STRING", 0,
         "Separator used in output text", 0},
     {"trim", 't', 0, 0,
@@ -64,6 +66,17 @@ static STRINGLIST *make_excludes(const char *input)
     tokenizer_free_tokens(t);
     tokenizer_delete(t);
     return excludes;
+}
+
+static void set_quote_characters(CONFIGURATION *self, const char *input)
+{
+    self->ignore_quoted_delimiters = true;
+    if (!input)
+    {
+        return;
+    }
+    self->quote_open = input[0];
+    self->quote_close = strlen(input) == 1 ? input[0] : input[1];
 }
 
 static char *convert_escaped_delimiters(const char *input)
@@ -138,6 +151,9 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'n':
         configuration->empty_string = arg;
         break;
+    case 'q':
+        set_quote_characters(configuration, arg);
+        break;
     case 's':
         configuration->separator = arg;
         break;
@@ -145,6 +161,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->trim_non_alphanumeric = true;
         break;
     case ARGP_KEY_NO_ARGS:
+        configuration_delete(configuration);
         argp_usage(state);
          /*NOTREACHED*/
         break;
@@ -168,11 +185,14 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     self->allow_empty_tokens = false;
     self->backslash_escapes_delimiters = false;
     self->trim_non_alphanumeric = false;
+    self->ignore_quoted_delimiters = false;
     self->empty_string = "NULL";
     self->fields = stringlist_new();
     self->file = NULL;
     self->excludes = make_excludes(getenv("FIELDX_EXCLUDES"));
     self->separator = " ";
+    self->quote_open = '"';
+    self->quote_close = '"';
     struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
     argp_parse(&argp, argc, argv, 0, 0, self);
     return self;

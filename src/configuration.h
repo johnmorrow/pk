@@ -26,8 +26,11 @@ typedef struct configuration_s
     bool allow_empty_tokens;
     bool backslash_escapes_delimiters;
     bool trim_non_alphanumeric;
+    bool ignore_quoted_delimiters;
     char *delimiters;
     char *file;
+    char quote_close;
+    char quote_open;
     const char *empty_string;
     const char *separator;
     STRINGLIST *excludes;

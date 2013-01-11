@@ -42,13 +42,13 @@ static struct argp_option options[] = {
         "Strings excluded from output (separated by :)", 0},
     {"file", 'f', "FILE", 0,
         "Read input from file instead of stdin", 0},
-    {"null", 'n', "STRING", 1,
+    {"null", 'N', "STRING", 1,
         "Change output text used for empty fields", 0},
     {"quotes", 'q', "STRING", 1,
         "Ignore delimiters within quotes", 0},
-    {"separator", 's', "STRING", 0,
+    {"separator", 'S', "STRING", 0,
         "Separator used in output text", 0},
-    {"trim", 't', 0, 0,
+    {"trim", 'T', 0, 0,
         "Trim non-alphanumerics characters before printing", 0},
     {0, 0, 0, 0, 0, 0}
 };
@@ -148,16 +148,16 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case 'f':
         configuration->file = arg;
         break;
-    case 'n':
+    case 'N':
         configuration->empty_string = arg;
         break;
     case 'q':
         set_quote_characters(configuration, arg);
         break;
-    case 's':
+    case 'S':
         configuration->separator = arg;
         break;
-    case 't':
+    case 'T':
         configuration->trim_non_alphanumeric = true;
         break;
     case ARGP_KEY_NO_ARGS:

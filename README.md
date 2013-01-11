@@ -1,7 +1,7 @@
 # fieldx -- a field extraction utility
 
-Do you use lots of shell pipelines and find yourself choosing between using _cut_
-or _awk_ to select columns from input? _fieldx_ is designed as a middle-ground
+Do you use lots of shell pipelines and find yourself choosing between _cut_
+and _awk_ to select columns from input? _fieldx_ is designed as a middle-ground
 tool; flexible enough to handle variable numbers of delimiters, fixed format
 files, quoted or escaped delimiters and more.
 
@@ -17,14 +17,19 @@ A field extraction utility
   -e, --empty                Allow empty fields
   -E, --excludes[=STRINGS]   Strings excluded from output (separated by :)
   -f, --file=FILE            Read input from file instead of stdin
-  -n, --null[=STRING]        Change output text used for empty fields
+  -N, --null[=STRING]        Change output text used for empty fields
   -q, --quotes[=STRING]      Ignore delimiters within quotes
-  -s, --separator=STRING     Separator used in output text
-  -t, --trim                 Trim non-alphanumerics characters before printing
+  -S, --separator=STRING     Separator used in output text
+  -T, --trim                 Trim non-alphanumerics characters before printing
   -?, --help                 Give this help list
       --usage                Give a short usage message
   -V, --version              Print program version
 ```
+
+It may help to remember that when using short flags, lower-case flags
+will affect how the input is processed, for example, changing the field
+delimiters. Upper-case flags will affect the output of fieldx, for example,
+the output separator or whether tokens are trimmed of alphanumerics.
 
 Examples
 --------
@@ -68,7 +73,7 @@ A B C D
 Change the output separator to create new file formats:
 
 ```shell
-$ ps aux | fieldx -s, 1 2 | head
+$ ps aux | fieldx -S, 1 2 | head
 USER,PID
 root,1
 root,2
@@ -90,12 +95,12 @@ sys /bin/sh
 
 #### Trimming non-alphanumeric fields
 
-The -t flags trims non-alphanumeric characters from the left and right side
+The *-T* flags trims non-alphanumeric characters from the left and right side
 before printing the field to stdout. This is useful removing quotes,
 parentheses or other visual delineations.
 
 ```shell
-$ echo "'Example User' <foobar@example.com>" | fieldx -t 3
+$ echo "'Example User' <foobar@example.com>" | fieldx -T 3
 foobar@example.com
 ```
 
@@ -132,7 +137,7 @@ $ cat input
 $ fieldx -f input -q"()" 1
 (Bilbo Baggins)
 (Frodo Baggins)
-$ fieldx -f input -q"()" -t 1
+$ fieldx -f input -q"()" -T 1
 Bilbo Baggins
 Frodo Baggins
 ```
@@ -140,7 +145,7 @@ Frodo Baggins
 #### Excludes
 
 A list of strings that will always be excluded from the output can be supplied
-to fieldx via the _-E_ flag. An example use case for this is when dealing with
+to fieldx via the *-E* flag. An example use case for this is when dealing with
 lists of servers you may want to automatically strip fully qualified hostnames
 down to their local names before passing on to another process in the pipeline.
 
@@ -156,8 +161,8 @@ baz active
 ```
 
 Alternatively, as this is likely to be a regular request, it can be set using an
-environment variable. When using the environment variable the _-E_ flag without
-arguments can be used to ignore the setting. The _-E_ flag used with arguments
+environment variable. When using the environment variable the *-E* flag without
+arguments can be used to ignore the setting. The *-E* flag used with arguments
 will override the environment variable.
 
 ```shell

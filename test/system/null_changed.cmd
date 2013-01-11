@@ -1,1 +1,1 @@
-../../src/fieldx -d: -e -nEMPTY 1 2 6
+../../src/fieldx -d: -e -NEMPTY 1 2 6

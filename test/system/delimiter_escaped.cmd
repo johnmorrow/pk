@@ -1,1 +1,1 @@
-../../src/fieldx -d"\t" -s, 1 2 3
+../../src/fieldx -d"\t" -S, 1 2 3

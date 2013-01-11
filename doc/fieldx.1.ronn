@@ -32,19 +32,19 @@ OPTIONS
 * `-f`, `--file`=<FILE>:
   Read input from <FILE> instead of stdin.
 
-* `-s`, `--separator`=<STRING>:
+* `-S`, `--separator`=<STRING>:
   The specified STRING is printed between requested fields on stdout. 
   If this flag is not set then fields are printed separated by a single
   <space>.
 
-* `-n`, `--null`[=<STRING>]:
+* `-N`, `--null`[=<STRING>]:
   By default fields that have been directly requested but are empty will
   be represented in the output by the string NULL. Using this flag causes
   the string <STRING> to be used instead. Using this flag without an
   arguments causes empty fields to be excluded from output without any
   indication.
 
-* `-t`, `--trim`:
+* `-T`, `--trim`:
   Trim non-alphanumerics characters from the beginning and end of each
   field before printing.
 
@@ -60,8 +60,8 @@ OPTIONS
 ## ENVIRONMENT
 
 * `FIELDX_EXCLUDES`:
-  This is a : separated list of strings to be removed from  fields
-  before printing.  Overridden by the -E option.
+  This is a : separated list of strings to be removed from fields
+  before printing. Overridden by the -E option.
 
 ## EXAMPLES
 
@@ -93,7 +93,7 @@ possibly contain empty fields:
 
 Change the output separator to create new file formats:
 
-    $ ps aux | fieldx -s, 1 2 | head
+    $ ps aux | fieldx -S, 1 2 | head
     USER,PID
     root,1
     root,2

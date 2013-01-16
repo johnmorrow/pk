@@ -35,7 +35,7 @@ struct field_s
             size_t start;
             size_t finish;
         } range;
-    };
+    } u;
     enum
     { NUMBER, STRING, RANGE } which;
 };
@@ -55,34 +55,34 @@ static struct field_s *str_to_field(const char *str)
     char *tmp1 = NULL;
     char *tmp2 = NULL;
     struct field_s *retval = MALLOC(struct field_s);
-    if (Sscanf(str, "%zu-%zu", &retval->range.start, &retval->range.finish) ==
-        2)
+    if (Sscanf(str, "%zu-%zu", &retval->u.range.start, &retval->u.range.finish)
+        == 2)
     {
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu%a[-]", &retval->range.start, &tmp1) == 2)
+    else if (Sscanf(str, "%zu%a[-]", &retval->u.range.start, &tmp1) == 2)
     {
-        retval->range.finish = 0;
+        retval->u.range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%a[-]%zu", &tmp2, &retval->range.finish) == 2)
+    else if (Sscanf(str, "%a[-]%zu", &tmp2, &retval->u.range.finish) == 2)
     {
-        retval->range.start = 1;
+        retval->u.range.start = 1;
         retval->which = RANGE;
     }
     else if (strcmp(str, "-") == 0)
     {
-        retval->range.start = 1;
-        retval->range.finish = 0;
+        retval->u.range.start = 1;
+        retval->u.range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu", &retval->number) == 1)
+    else if (Sscanf(str, "%zu", &retval->u.number) == 1)
     {
         retval->which = NUMBER;
     }
     else
     {
-        retval->string = str;
+        retval->u.string = str;
         retval->which = STRING;
     }
     if (tmp1)
@@ -171,17 +171,17 @@ void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
         switch (f->which)
         {
         case STRING:
-            output_string(self, f->string);
+            output_string(self, f->u.string);
             break;
         case RANGE:
-            range_index_start = Position_to_index(f->range.start);
-            if (f->range.finish == 0)
+            range_index_start = Position_to_index(f->u.range.start);
+            if (f->u.range.finish == 0)
             {
                 range_index_finish = Position_to_index(stringlist_size(tokens));
             }
             else
             {
-                range_index_finish = Position_to_index(f->range.finish);
+                range_index_finish = Position_to_index(f->u.range.finish);
             }
             for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
@@ -189,7 +189,7 @@ void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
             }
             break;
         case NUMBER:
-            token_index = Position_to_index(f->number);
+            token_index = Position_to_index(f->u.number);
             output_field(self, tokens, token_index);
             break;
         }

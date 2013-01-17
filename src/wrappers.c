@@ -136,12 +136,3 @@ int Sscanf(const char *str, const char *fmt, ...)
     }
     return retval;
 }
-
-size_t Position_to_index(size_t position)
-{
-    if (position == 0)
-    {
-        error(EXIT_FAILURE, 0, "offset bug detected");
-    }
-    return position - 1;
-}

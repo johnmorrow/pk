@@ -41,6 +41,4 @@ extern int Sscanf(const char *str, const char *format, ...);
 #define REALLOC_ARRAY(pointer, number, type) \
         ((type *)Realloc(pointer, (number) * sizeof(type)))
 
-extern size_t Position_to_index(size_t);
-
 #endif

@@ -20,8 +20,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "tokenizer.h"
+#include "helpers.h"
 #include "stringlist.h"
+#include "tokenizer.h"
 #include "wrappers.h"
 
 struct tokenizer_s

@@ -21,6 +21,7 @@
 #include <argp.h>
 
 #include "configuration.h"
+#include "helpers.h"
 #include "tokenizer.h"
 #include "wrappers.h"
 
@@ -77,55 +78,6 @@ static void set_quote_characters(CONFIGURATION *self, const char *input)
     }
     self->quote_open = input[0];
     self->quote_close = strlen(input) == 1 ? input[0] : input[1];
-}
-
-static char *convert_escaped_delimiters(const char *input)
-{
-    char *output = Malloc(strlen(input) + 1);
-    bool escaped = false;
-    size_t op = 0;
-    for (size_t ip = 0; input[ip]; ++ip)
-    {
-        if (!escaped && input[ip] == '\\')
-        {
-            escaped = true;
-        }
-        else
-        {
-            if (escaped)
-            {
-                switch (input[ip])
-                {
-                case 't':
-                    output[op] = '\t';
-                    break;
-                case 'f':
-                    output[op] = '\f';
-                    break;
-                case 'n':
-                    output[op] = '\n';
-                    break;
-                case 'r':
-                    output[op] = '\r';
-                    break;
-                case 'v':
-                    output[op] = '\v';
-                    break;
-                default:
-                    output[op] = input[ip];
-                    break;
-                }
-            }
-            else
-            {
-                output[op] = input[ip];
-            }
-            op += 1;
-            escaped = false;
-        }
-    }
-    output[op] = '\0';
-    return output;
 }
 
 static error_t parse_opt(int key, char *arg, struct argp_state *state)

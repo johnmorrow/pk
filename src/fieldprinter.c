@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "fieldprinter.h"
+#include "helpers.h"
 #include "wrappers.h"
 
 struct field_s

@@ -1,1 +1,1 @@
-../../src/fieldx 2-4 
+../../src/fieldx 2..4 

@@ -71,7 +71,7 @@ static struct field_s *str_to_field(const char *str)
         retval->u.range.start = 1;
         retval->which = RANGE;
     }
-    else if (strcmp(str, "-") == 0)
+    else if (strcmp(str, "..") == 0)
     {
         retval->u.range.start = 1;
         retval->u.range.finish = 0;

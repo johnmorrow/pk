@@ -59,21 +59,21 @@ The following range formats are supported:
 
 | Format | Meaning                                                 |
 |--------|---------------------------------------------------------|
-| X-Y    | Print each field from index X through to index Y        |
-| X-     | Print each field from index X through to the last field |
-| -Y     | Print each field from field 1 through to field Y        |
-| -      | Print every field                                       |
+| X..Y   | Print each field from index X through to index Y        |
+| X..    | Print each field from index X through to the last field |
+| ..Y    | Print each field from field 1 through to field Y        |
+| ..     | Print every field                                       |
 
 Here are examples of each type of range:
 
 ```shell
-$ echo A B C D E | fieldx 2-4
+$ echo A B C D E | fieldx 2..4
 B C D
-$ echo A B C D E | fieldx 2-
+$ echo A B C D E | fieldx 2..
 B C D E
-$ echo A B C D E | fieldx -- -3  # careful, looks like a flag
+$ echo A B C D E | fieldx ..3
 A B C
-$ echo A B C D E | fieldx -
+$ echo A B C D E | fieldx ..
 A B C D E
 ```
 

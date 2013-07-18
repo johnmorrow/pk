@@ -56,22 +56,22 @@ static struct field_s *str_to_field(const char *str)
     char *tmp1 = NULL;
     char *tmp2 = NULL;
     struct field_s *retval = MALLOC(struct field_s);
-    if (Sscanf(str, "%zu-%zu", &retval->u.range.start, &retval->u.range.finish)
+    if (Sscanf(str, "%zu..%zu", &retval->u.range.start, &retval->u.range.finish)
         == 2)
     {
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu%a[-]", &retval->u.range.start, &tmp1) == 2)
+    else if (Sscanf(str, "%zu%a[..]", &retval->u.range.start, &tmp1) == 2)
     {
         retval->u.range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%a[-]%zu", &tmp2, &retval->u.range.finish) == 2)
+    else if (Sscanf(str, "%a[..]%zu", &tmp2, &retval->u.range.finish) == 2)
     {
         retval->u.range.start = 1;
         retval->which = RANGE;
     }
-    else if (strcmp(str, "-") == 0)
+    else if (strcmp(str, "..") == 0)
     {
         retval->u.range.start = 1;
         retval->u.range.finish = 0;

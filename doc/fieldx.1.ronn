@@ -1,13 +1,13 @@
-fieldx(1) -- a field extraction utility
+pk(1) -- a field extraction utility
 =============================================
 
 ## SYNOPSIS
 
-`fieldx` [<OPTIONS>] <FIELD>...<br>
+`pk` [<OPTIONS>] <FIELD>...<br>
 
 ## DESCRIPTION
 
-`fieldx` prints specified fields from column based input.
+`pk` prints specified fields from column based input.
 
 OPTIONS
 
@@ -23,7 +23,7 @@ OPTIONS
 * `-e`, `--empty`:
   Allow empty fields. Some file formats, for example passwd(5), allow
   blank fields indicated by adjacent delimiter characters. In normal
-  operation fieldx treats adjacent delimiter characters as a single
+  operation pk treats adjacent delimiter characters as a single
   logical delimiter, this flag reverses that behaviour.
 
 * `-E`, `--excludes`[=<STRINGS>]:
@@ -61,7 +61,7 @@ OPTIONS
 
 Select and rearrange output from column based commands:
 
-    $ df | fieldx 6 5
+    $ df | pk 6 5
     Mounted Use%
     / 9%
     /dev 1%
@@ -71,25 +71,25 @@ Select and rearrange output from column based commands:
 
 Non-numeric fields are outputted directly:
 
-    $ ls -l /etc | fieldx 9 is owned by 3
+    $ ls -l /etc | pk 9 is owned by 3
     adduser.conf is owned by root
     alternatives/ is owned by root
     apparmor/ is owned by root
 
 Ranges are also supported:
 
-    $ echo A B C D | fieldx 2-3
+    $ echo A B C D | pk 2-3
     B C
-    $ echo A B C D | fieldx 2-
+    $ echo A B C D | pk 2-
     B C D
-    $ echo A B C D | fieldx -- -3  # careful, looks like a flag
+    $ echo A B C D | pk -- -3  # careful, looks like a flag
     A B C
-    $ echo A B C D | fieldx -
+    $ echo A B C D | pk -
     A B C D
 
 Change the output separator to create new file formats:
 
-    $ ps aux | fieldx -S, 1 2 | head
+    $ ps aux | pk -S, 1 2 | head
     USER,PID
     root,1
     root,2
@@ -100,7 +100,7 @@ Change the output separator to create new file formats:
 Fixed formats, such as */etc/passwd*, can have different delimiters and
 possibly contain empty fields:
 
-    $ cat /etc/passwd | fieldx -e -d: 1 7
+    $ cat /etc/passwd | pk -e -d: 1 7
     root /bin/bash
     daemon /bin/sh
     bin /bin/sh
@@ -112,7 +112,7 @@ The *-T* flags trims non-alphanumeric characters from the left and right side
 before printing the field to stdout. This is useful removing quotes,
 parentheses or other visual delineations.
 
-    $ echo "'Example User' <foobar@example.com>" | fieldx -T 3
+    $ echo "'Example User' <foobar@example.com>" | pk -T 3
     foobar@example.com
 
 ## QUOTING
@@ -122,7 +122,7 @@ Quoting is supported. Double quote is the default quote character:
     $ cat input
     "Bilbo Baggins", "The Hobbit"
     "Frodo Baggins", "The Lord of the Rings"
-    $ fieldx -f input -d", " -q 2
+    $ pk -f input -d", " -q 2
     "The Hobbit"
     "The Lord of the Rings"
 
@@ -131,7 +131,7 @@ The quote character can be specified.
     $ cat input
     'Bilbo Baggins', 'The Hobbit'
     'Frodo Baggins', 'The Lord of the Rings'
-    $ fieldx -f input -d", " -q"'" 1
+    $ pk -f input -d", " -q"'" 1
     'Bilbo Baggins'
     'Frodo Baggins'
 
@@ -140,17 +140,17 @@ A two character argument supplied to the quote flag are used as start and end:
     $ cat input
     (Bilbo Baggins) (The Hobbit)
     (Frodo Baggins) (The Lord of the Rings)
-    $ fieldx -f input -q"()" 1
+    $ pk -f input -q"()" 1
     (Bilbo Baggins)
     (Frodo Baggins)
-    $ fieldx -f input -q"()" -T 1
+    $ pk -f input -q"()" -T 1
     Bilbo Baggins
     Frodo Baggins
 
 ## EXCLUDES
 
 A list of strings that will always be excluded from the output can be supplied
-to fieldx via the *-E* flag. An example use case for this is when dealing with
+to pk via the *-E* flag. An example use case for this is when dealing with
 lists of servers you may want to automatically strip fully qualified hostnames
 down to their local names before passing on to another process in the pipeline.
 
@@ -158,7 +158,7 @@ down to their local names before passing on to another process in the pipeline.
     foo.example.com 192.168.1.1 active
     bar.example.com 192.168.1.2 repair
     baz.example.net 192.168.1.3 active
-    $ cat input | fieldx -E.example.com:.example.net 1 3
+    $ cat input | pk -E.example.com:.example.net 1 3
     foo active
     bar repair
     baz active
@@ -167,19 +167,19 @@ Alternatively, as this is likely to be a regular request, it can be set using an
 environment variable. When using the environment variable the *-E* flag without
 arguments can be used to ignore the setting. The *-E* flag used with arguments
 will override the environment variable.
-    $ export FIELDX_EXCLUDES=.example.com:.example.net
-    $ cat input | fieldx 1 3
+    $ export PK_EXCLUDES=.example.com:.example.net
+    $ cat input | pk 1 3
     foo active
     bar repair
     baz active
-    $ cat input | fieldx -E 1 3
+    $ cat input | pk -E 1 3
     foo.example.com active
     bar.example.com repair
     baz.example.net active
 
 ## ENVIRONMENT
 
-* `FIELDX_EXCLUDES`:
+* `PK_EXCLUDES`:
   This is a : separated list of strings to be removed from fields
   before printing. Overridden by the -E option.
 

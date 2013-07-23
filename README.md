@@ -1,7 +1,7 @@
-# fieldx -- a field extraction utility
+# pk -- a field extraction utility
 
 Do you use lots of shell pipelines and find yourself choosing between _cut_
-and _awk_ to select columns from input? _fieldx_ is designed as a middle-ground
+and _awk_ to select columns from input? _pk_ is designed as a middle-ground
 tool; flexible enough to handle variable numbers of delimiters, fixed format
 files, quoted or escaped delimiters and more.
 
@@ -9,7 +9,7 @@ Usage
 -----
 
 ```shell
-Usage: fieldx [OPTION...] [STRING...]
+Usage: pk [OPTION...] [STRING...]
 A field extraction utility
 
   -b, --backslash            Backslash escapes delimiters
@@ -28,7 +28,7 @@ A field extraction utility
 
 It may help to remember that when using short flags, lower-case flags
 will affect how the input is processed, for example, changing the field
-delimiters. Upper-case flags will affect the output of fieldx, for example,
+delimiters. Upper-case flags will affect the output of pk, for example,
 the output separator or whether tokens are trimmed of alphanumerics.
 
 Examples
@@ -36,7 +36,7 @@ Examples
 
 #### Basic usage
 
-_fieldx_ is a tool for grabbing columns from an input stream
+_pk_ is a tool for grabbing columns from an input stream
 and printing them on _stdout_. Each argument represents something
 you would like to see appearing in the output.
 
@@ -45,7 +45,7 @@ to see that column from the input printed in the output. The first
 column in the input stream has an index of 1.
 
 ```shell
-$ df | fieldx 6 5
+$ df | pk 6 5
 Mounted Use%
 / 9%
 /dev 1%
@@ -67,13 +67,13 @@ The following range formats are supported:
 Here are examples of each type of range:
 
 ```shell
-$ echo A B C D E | fieldx 2..4
+$ echo A B C D E | pk 2..4
 B C D
-$ echo A B C D E | fieldx 2..
+$ echo A B C D E | pk 2..
 B C D E
-$ echo A B C D E | fieldx ..3
+$ echo A B C D E | pk ..3
 A B C
-$ echo A B C D E | fieldx ..
+$ echo A B C D E | pk ..
 A B C D E
 ```
 
@@ -82,7 +82,7 @@ a range is outputted directly. This can be useful for putting
 together command lines or quick scripts:
 
 ```shell
-$ ls -l /etc | fieldx 9 is owned by 3
+$ ls -l /etc | pk 9 is owned by 3
 adduser.conf is owned by root
 alternatives/ is owned by root
 apparmor/ is owned by root
@@ -90,7 +90,7 @@ apparmor/ is owned by root
 
 #### Changing the delimiters
 
-In its default mode of operation _fieldx_ uses both `<tab>` and
+In its default mode of operation _pk_ uses both `<tab>` and
 `<space>` as delimiter characters. Additionally, multiple delimiters
 appearing next to each other in the input stream are treated as
 a single delimiter. This makes it good for parsing input streams
@@ -110,7 +110,7 @@ by single spaces. Use the __-S__ flag to change the string that separates
 output fields:
 
 ```shell
-$ ps aux | fieldx -S, 1 2 | head
+$ ps aux | pk -S, 1 2 | head
 USER,PID
 root,1
 root,2
@@ -120,11 +120,11 @@ root,3
 #### Fixed format files
 
 Fixed formats, such as */etc/passwd*, can have different delimiters and
-possibly contain empty fields. Using the __-e__ flag tells _fieldx_ that
+possibly contain empty fields. Using the __-e__ flag tells _pk_ that
 adjacent delimiter characters in the input line represent empty fields.
 
 ```shell
-$ cat /etc/passwd | fieldx -e -d: 1 7
+$ cat /etc/passwd | pk -e -d: 1 7
 root /bin/bash
 daemon /bin/sh
 bin /bin/sh
@@ -133,11 +133,11 @@ sys /bin/sh
 
 #### Empty fields
 
-If you tell _fieldx_ to print an empty field it will print out the string
+If you tell _pk_ to print an empty field it will print out the string
 *NULL* by default. This can be set to another string using the __-N__ flag.
 If this flag is used without an argument then empty fields are not printed.
 
-Note that _fieldx_ will not print trailing empty fields unless you specify
+Note that _pk_ will not print trailing empty fields unless you specify
 them directly using their index. i.e. trailing empty fields are not printed
 if specified as a range.
 
@@ -148,14 +148,14 @@ before printing the field to stdout. This is useful removing quotes,
 parentheses or other visual delineations.
 
 ```shell
-$ echo "'Example User' <foobar@example.com>" | fieldx -T 3
+$ echo "'Example User' <foobar@example.com>" | pk -T 3
 foobar@example.com
 ```
 
 #### Quoting
 
 Some text formats allow delimiters to be ignored inside quotes.
-_fieldx_ supports simple quoting, that is you can select a single
+_pk_ supports simple quoting, that is you can select a single
 quote character or a pair (start and end) of characters. Nested
 quotes or multiple types of quoting on the same line are not
 supported.
@@ -167,7 +167,7 @@ default quote character:
 $ cat input
 "Bilbo Baggins", "The Hobbit"
 "Frodo Baggins", "The Lord of the Rings"
-$ fieldx -f input -d", " -q 2
+$ pk -f input -d", " -q 2
 "The Hobbit"
 "The Lord of the Rings"
 ```
@@ -179,7 +179,7 @@ argument to the __-q__ flag:
 $ cat input
 'Bilbo Baggins', 'The Hobbit'
 'Frodo Baggins', 'The Lord of the Rings'
-$ fieldx -f input -d", " -q"'" 1
+$ pk -f input -d", " -q"'" 1
 'Bilbo Baggins'
 'Frodo Baggins'
 ```
@@ -191,10 +191,10 @@ specify the open and close quote characters:
 $ cat input
 (Bilbo Baggins) (The Hobbit)
 (Frodo Baggins) (The Lord of the Rings)
-$ fieldx -f input -q"()" 1
+$ pk -f input -q"()" 1
 (Bilbo Baggins)
 (Frodo Baggins)
-$ fieldx -f input -q"()" -T 1
+$ pk -f input -q"()" -T 1
 Bilbo Baggins
 Frodo Baggins
 ```
@@ -202,7 +202,7 @@ Frodo Baggins
 #### Excludes
 
 A list of strings that will always be excluded from the output can be supplied
-to fieldx via the __-E__ flag. An example use case for this is when dealing with
+to pk via the __-E__ flag. An example use case for this is when dealing with
 lists of servers you may want to automatically strip fully qualified hostnames
 down to their local names before passing on to another process in the pipeline.
 
@@ -211,7 +211,7 @@ $ cat input
 foo.example.com 192.168.1.1 active
 bar.example.com 192.168.1.2 repair
 baz.example.net 192.168.1.3 active
-$ cat input | fieldx -E.example.com:.example.net 1 3
+$ cat input | pk -E.example.com:.example.net 1 3
 foo active
 bar repair
 baz active
@@ -223,12 +223,12 @@ arguments can be used to ignore the setting. The __-E__ flag used with arguments
 will override the environment variable.
 
 ```shell
-$ export FIELDX_EXCLUDES=.example.com:.example.net
-$ cat input | fieldx 1 3
+$ export PK_EXCLUDES=.example.com:.example.net
+$ cat input | pk 1 3
 foo active
 bar repair
 baz active
-$ cat input | fieldx -E 1 3
+$ cat input | pk -E 1 3
 foo.example.com active
 bar.example.com repair
 baz.example.net active

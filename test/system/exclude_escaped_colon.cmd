@@ -1,1 +1,1 @@
-../../src/fieldx -E"y\:y" 1
+../../src/pk -E"y\:y" 1

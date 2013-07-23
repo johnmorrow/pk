@@ -1,1 +1,1 @@
-../../src/fieldx -d: -e 1 2 6
+../../src/pk -d: -e 1 2 6

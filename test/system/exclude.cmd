@@ -1,1 +1,1 @@
-../../src/fieldx -E.foo.com 1
+../../src/pk -E.foo.com 1

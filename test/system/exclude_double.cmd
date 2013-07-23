@@ -1,1 +1,1 @@
-../../src/fieldx -EXXX 1
+../../src/pk -EXXX 1

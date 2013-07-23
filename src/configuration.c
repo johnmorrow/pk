@@ -26,9 +26,9 @@
 #include "wrappers.h"
 
 
-const char *argp_program_version = "fieldx 1.0";
+const char *argp_program_version = "pk 1.0";
 const char *argp_program_bug_address =
-                "[ https://github.com/johnmorrow/fieldx/issues ]";
+                "[ https://github.com/johnmorrow/pk/issues ]";
 static char args_doc[] = "[STRING...]";
 static char doc[] = "A field extraction utility";
 
@@ -141,7 +141,7 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     self->empty_string = "NULL";
     self->fields = stringlist_new();
     self->file = NULL;
-    self->excludes = make_excludes(getenv("FIELDX_EXCLUDES"));
+    self->excludes = make_excludes(getenv("PK_EXCLUDES"));
     self->separator = " ";
     self->quote_open = '"';
     self->quote_close = '"';

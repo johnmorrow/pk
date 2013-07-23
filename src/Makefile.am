@@ -4,9 +4,9 @@ AM_CFLAGS = -std=c99 -D_XOPEN_SOURCE=700 -D_BSD_SOURCE -D_GNU_SOURCE \
             -Wuninitialized -Wmissing-declarations -Wno-long-long \
             -Wno-unused-parameter -Wno-missing-field-initializers
 
-bin_PROGRAMS = fieldx
+bin_PROGRAMS = pk
 
-fieldx_SOURCES = configuration.c fieldprinter.c helpers.c main.c stringlist.c \
+pk_SOURCES = configuration.c fieldprinter.c helpers.c main.c stringlist.c \
                  tokenizer.c wrappers.c
 
 noinst_HEADERS = configuration.h fieldprinter.h helpers.h stringlist.h \

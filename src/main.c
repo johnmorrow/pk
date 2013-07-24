@@ -15,10 +15,9 @@
  *
  */
 
-#include <errno.h>
-#include <error.h>
-#include <limits.h>
 #include <stdio.h>
+#include <err.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <string.h>
 

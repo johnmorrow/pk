@@ -15,8 +15,7 @@
  *
  */
 
-#include <errno.h>
-#include <error.h>
+#include <err.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,45 +53,36 @@ struct fieldprinter_s
 static struct field_s *str_to_field(const char *str)
 {
     char *tmp1 = NULL;
-    char *tmp2 = NULL;
-    struct field_s *retval = MALLOC(struct field_s);
+	struct field_s *retval = MALLOC(struct field_s);
     if (Sscanf(str, "%zu..%zu", &retval->u.range.start, &retval->u.range.finish)
         == 2)
     {
+		        retval->which = RANGE;
+    }
+    else if (Sscanf(str, "%zu%[.]", &retval->u.range.start, &tmp1) == 2)
+    {
+		        retval->u.range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu%a[..]", &retval->u.range.start, &tmp1) == 2)
+    else if (Sscanf(str, "..%zu", &retval->u.range.finish) == 1)
     {
-        retval->u.range.finish = 0;
-        retval->which = RANGE;
-    }
-    else if (Sscanf(str, "%a[..]%zu", &tmp2, &retval->u.range.finish) == 2)
-    {
-        retval->u.range.start = 1;
+		        retval->u.range.start = 1;
         retval->which = RANGE;
     }
     else if (strcmp(str, "..") == 0)
     {
-        retval->u.range.start = 1;
+		        retval->u.range.start = 1;
         retval->u.range.finish = 0;
         retval->which = RANGE;
     }
     else if (Sscanf(str, "%zu", &retval->u.number) == 1)
     {
-        retval->which = NUMBER;
+		        retval->which = NUMBER;
     }
     else
     {
-        retval->u.string = str;
+		        retval->u.string = str;
         retval->which = STRING;
-    }
-    if (tmp1)
-    {
-        Free(tmp1);
-    }
-    if (tmp2)
-    {
-        Free(tmp2);
     }
     return retval;
 }
@@ -100,17 +90,17 @@ static struct field_s *str_to_field(const char *str)
 FIELDPRINTER *fieldprinter_new(STRINGLIST *fields, const char *separator,
                                const char *empty_string)
 {
-    FIELDPRINTER *self = MALLOC(FIELDPRINTER);
-    self->field_count = stringlist_size(fields);
-    self->fields = MALLOC_ARRAY(self->field_count, struct field_s *);
-    for (size_t i = 0; i < self->field_count; ++i)
+	    FIELDPRINTER *self = MALLOC(FIELDPRINTER);
+	    self->field_count = stringlist_size(fields);
+	    self->fields = MALLOC_ARRAY(self->field_count, struct field_s *);
+	    for (size_t i = 0; i < self->field_count; ++i)
     {
-        self->fields[i] = str_to_field(stringlist_string(fields, i));
-    }
-    self->separator = separator;
-    self->empty_string = empty_string;
-    self->at_start = true;
-    return self;
+		        self->fields[i] = str_to_field(stringlist_string(fields, i));
+		    }
+	    self->separator = separator;
+	    self->empty_string = empty_string;
+	    self->at_start = true;
+	    return self;
 }
 
 void fieldprinter_delete(FIELDPRINTER *self)
@@ -175,7 +165,7 @@ void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
             output_string(self, f->u.string);
             break;
         case RANGE:
-            range_index_start = Position_to_index(f->u.range.start);
+						            range_index_start = Position_to_index(f->u.range.start);
             if (f->u.range.finish == 0)
             {
                 range_index_finish = Position_to_index(stringlist_size(tokens));

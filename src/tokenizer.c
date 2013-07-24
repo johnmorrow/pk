@@ -136,7 +136,7 @@ static void trim_string(char *string)
     {
         (void)memmove(string, p, strlen(p) + 1);
     }
-    for (p = rindex(string, '\0'); p != string; --p)
+    for (p = strrchr(string, '\0'); p != string; --p)
     {
         if (isalnum(*p))
         {

@@ -15,12 +15,13 @@
  *
  */
 
+#include <err.h>
 #include <errno.h>
-#include <error.h>
-#include <stdarg.h>
 #include <stdio.h>
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <execinfo.h>
 
 #include "wrappers.h"
 
@@ -30,7 +31,7 @@ void *Malloc(size_t size)
     void *memory = malloc(size);
     if (memory == NULL && errno != 0)
     {
-        error(EXIT_FAILURE, errno, "unable to allocate memory");
+        err(EXIT_FAILURE, "unable to allocate memory");
     }
     return memory;
 }
@@ -41,7 +42,7 @@ void *Realloc(void *ptr, size_t size)
     void *memory = realloc(ptr, size);
     if (memory == NULL && errno != 0)
     {
-        error(EXIT_FAILURE, errno, "unable to allocate memory");
+        err(EXIT_FAILURE, "unable to allocate memory");
     }
     return memory;
 }
@@ -49,13 +50,13 @@ void *Realloc(void *ptr, size_t size)
 void Free(void *ptr)
 {
     if (ptr)
-    {
+    {	
         free(ptr);
-        ptr = NULL;
+		        ptr = NULL;
     }
     else
     {
-        error(EXIT_FAILURE, errno, "null pointer passed to free");
+        err(EXIT_FAILURE, "null pointer passed to free");
     }
 }
 
@@ -65,7 +66,7 @@ ssize_t Getline(char **lineptr, size_t * n, FILE * stream)
     ssize_t bytes_read = getline(lineptr, n, stream);
     if (bytes_read == -1 && errno != 0)
     {
-        error(EXIT_FAILURE, errno, "error reading input");
+        err(EXIT_FAILURE, "error reading input");
     }
     return bytes_read;
 }
@@ -79,7 +80,7 @@ int Asprintf(char **strp, const char *fmt, ...)
     va_end(ap);
     if (retval == -1)
     {
-        error(EXIT_FAILURE, errno, "unable to allocate memory");
+        err(EXIT_FAILURE, "unable to allocate memory");
     }
     return retval;
 }
@@ -90,7 +91,7 @@ int Fclose(FILE *fp)
     int status = fclose(fp);
     if (status == EOF)
     {
-        error(EXIT_FAILURE, errno, "unable to fclose");
+        err(EXIT_FAILURE, "unable to fclose");
     }
     fp = NULL;
     return status;
@@ -102,7 +103,7 @@ FILE *Fopen(const char *path, const char *mode)
     FILE *fp = fopen(path, mode);
     if (fp == NULL)
     {
-        error(EXIT_FAILURE, errno, "%s", path);
+        err(EXIT_FAILURE, "%s", path);
     }
     return fp;
 }
@@ -111,14 +112,14 @@ char *Strdup(const char *s)
 {
     if (!s)
     {
-        error(EXIT_FAILURE, 0, "null pointer passed to strdup");
+        err(EXIT_FAILURE, "null pointer passed to strdup");
     }
     char *copy;
     errno = 0;
     copy = strdup(s);
     if (!copy)
     {
-        error(EXIT_FAILURE, errno, "unable to duplicate string");
+        err(EXIT_FAILURE, "unable to duplicate string");
     }
     return copy;
 }
@@ -129,10 +130,10 @@ int Sscanf(const char *str, const char *fmt, ...)
     va_start(ap, fmt);
     errno = 0;
     int retval = vsscanf(str, fmt, ap);
-    va_end(ap);
+	    va_end(ap);
     if (retval != 0 && errno != 0)
     {
-        error(EXIT_FAILURE, errno, "problem parsing input");
+        err(EXIT_FAILURE, "problem parsing input");
     }
     return retval;
 }

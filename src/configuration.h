@@ -35,7 +35,7 @@ typedef struct configuration_s
     const char *separator;
     STRINGLIST *excludes;
     STRINGLIST *fields;
-    /*
+    /* 
      * internal state
      */
     TOKENIZER *tokenizer;

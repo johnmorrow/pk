@@ -15,8 +15,7 @@
  *
  */
 
-#include <errno.h>
-#include <error.h>
+#include <err.h>
 #include <limits.h>
 #include <stdlib.h>
 #include <string.h>
@@ -54,19 +53,19 @@ struct fieldprinter_s
 static struct field_s *str_to_field(const char *str)
 {
     char *tmp1 = NULL;
-    char *tmp2 = NULL;
     struct field_s *retval = MALLOC(struct field_s);
-    if (Sscanf(str, "%zu..%zu", &retval->u.range.start, &retval->u.range.finish)
-        == 2)
+    if (Sscanf
+        (str, "%zu..%zu", &retval->u.range.start,
+         &retval->u.range.finish) == 2)
     {
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%zu%a[..]", &retval->u.range.start, &tmp1) == 2)
+    else if (Sscanf(str, "%zu%[.]", &retval->u.range.start, &tmp1) == 2)
     {
         retval->u.range.finish = 0;
         retval->which = RANGE;
     }
-    else if (Sscanf(str, "%a[..]%zu", &tmp2, &retval->u.range.finish) == 2)
+    else if (Sscanf(str, "..%zu", &retval->u.range.finish) == 1)
     {
         retval->u.range.start = 1;
         retval->which = RANGE;
@@ -86,18 +85,10 @@ static struct field_s *str_to_field(const char *str)
         retval->u.string = str;
         retval->which = STRING;
     }
-    if (tmp1)
-    {
-        Free(tmp1);
-    }
-    if (tmp2)
-    {
-        Free(tmp2);
-    }
     return retval;
 }
 
-FIELDPRINTER *fieldprinter_new(STRINGLIST *fields, const char *separator,
+FIELDPRINTER *fieldprinter_new(STRINGLIST * fields, const char *separator,
                                const char *empty_string)
 {
     FIELDPRINTER *self = MALLOC(FIELDPRINTER);
@@ -113,7 +104,7 @@ FIELDPRINTER *fieldprinter_new(STRINGLIST *fields, const char *separator,
     return self;
 }
 
-void fieldprinter_delete(FIELDPRINTER *self)
+void fieldprinter_delete(FIELDPRINTER * self)
 {
     for (size_t i = 0; i < self->field_count; ++i)
     {
@@ -123,7 +114,7 @@ void fieldprinter_delete(FIELDPRINTER *self)
     Free(self);
 }
 
-static void output_string(FIELDPRINTER *self, const char *string)
+static void output_string(FIELDPRINTER * self, const char *string)
 {
     if (string == NULL || *string == '\0')
     {
@@ -143,7 +134,7 @@ static void output_string(FIELDPRINTER *self, const char *string)
     }
 }
 
-static void output_field(FIELDPRINTER *self, const STRINGLIST *tokens,
+static void output_field(FIELDPRINTER * self, const STRINGLIST * tokens,
                          size_t token_index)
 {
     const char *token;
@@ -159,7 +150,7 @@ static void output_field(FIELDPRINTER *self, const STRINGLIST *tokens,
     }
 }
 
-void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
+void fieldprinter_print(FIELDPRINTER * self, const STRINGLIST * tokens)
 {
     size_t range_index_start;
     size_t range_index_finish;
@@ -178,7 +169,8 @@ void fieldprinter_print(FIELDPRINTER *self, const STRINGLIST *tokens)
             range_index_start = Position_to_index(f->u.range.start);
             if (f->u.range.finish == 0)
             {
-                range_index_finish = Position_to_index(stringlist_size(tokens));
+                range_index_finish =
+                    Position_to_index(stringlist_size(tokens));
             }
             else
             {

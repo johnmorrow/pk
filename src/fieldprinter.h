@@ -25,7 +25,8 @@
 struct fieldprinter_s;
 typedef struct fieldprinter_s FIELDPRINTER;
 
-extern FIELDPRINTER *fieldprinter_new(STRINGLIST *, const char *, const char *);
+extern FIELDPRINTER *fieldprinter_new(STRINGLIST *, const char *,
+                                      const char *);
 extern void fieldprinter_delete(FIELDPRINTER *);
 extern void fieldprinter_print(FIELDPRINTER *, const STRINGLIST *);
 

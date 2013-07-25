@@ -12,6 +12,8 @@ AC_TYPE_SSIZE_T
 AC_FUNC_ERROR_AT_LINE
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([strdup strtol])
+AC_CHECK_HEADER(argp.h,,[AC_MSG_ERROR([Could not find argp.h])])
+AC_CHECK_LIB(argp, argp_parse, ARGP_LIBS=-largp)
+AC_SUBST([ARGP_LIBS])
 AC_CONFIG_FILES([Makefile src/Makefile])
 AC_OUTPUT

@@ -3,9 +3,9 @@ cd $(dirname $0)
 for i in $(find . -name "*.cmd" -print | sort)
 do
     base=$(basename $i .cmd)
-    need=$(. $i < ${base}.in | md5sum)
+    got=$(. $i < ${base}.in | md5sum)
     want=$(cat ${base}.out | md5sum)
-    if [ "${want}" != "${need}" ]
+    if [ "${want}" != "${got}" ]
     then
         echo FAILURE: ${base}
         cat ${base}.cmd

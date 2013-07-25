@@ -107,7 +107,7 @@ void stringlist_debug(const STRINGLIST * self)
 {
     for (size_t i = 0; i < self->used; ++i)
     {
-        (void)fprintf(stderr, "[%lu:%s] ", i, self->strings[i]);
+        (void)fprintf(stderr, "[%lu:%s] ", (unsigned long)i, self->strings[i]);
     }
     (void)fprintf(stderr, "\n");
 }

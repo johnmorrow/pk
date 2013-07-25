@@ -36,7 +36,7 @@ Makefile.in
 /config.status
 /src/.deps/
 /src/Makefile
-/src/fieldx
+/src/pk
 /stamp-h1
 /config.h
 

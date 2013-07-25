@@ -50,9 +50,9 @@ void *Realloc(void *ptr, size_t size)
 void Free(void *ptr)
 {
     if (ptr)
-    {	
+    {
         free(ptr);
-		        ptr = NULL;
+        ptr = NULL;
     }
     else
     {
@@ -85,7 +85,7 @@ int Asprintf(char **strp, const char *fmt, ...)
     return retval;
 }
 
-int Fclose(FILE *fp)
+int Fclose(FILE * fp)
 {
     errno = 0;
     int status = fclose(fp);
@@ -130,7 +130,7 @@ int Sscanf(const char *str, const char *fmt, ...)
     va_start(ap, fmt);
     errno = 0;
     int retval = vsscanf(str, fmt, ap);
-	    va_end(ap);
+    va_end(ap);
     if (retval != 0 && errno != 0)
     {
         err(EXIT_FAILURE, "problem parsing input");

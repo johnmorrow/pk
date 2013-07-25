@@ -27,7 +27,7 @@
 
 struct tokenizer_s
 {
-    /*
+    /* 
      * These fields affect how the tokenizer operates.
      */
     bool allow_empty_tokens;
@@ -37,7 +37,7 @@ struct tokenizer_s
     const char *delimiters;
     const STRINGLIST *excludes;
     char escape_character;
-    /*
+    /* 
      * These fields store internal state.
      */
     const char *original;
@@ -68,39 +68,39 @@ TOKENIZER *tokenizer_new()
     return self;
 }
 
-void tokenizer_delete(TOKENIZER *self)
+void tokenizer_delete(TOKENIZER * self)
 {
     Free(self);
 }
 
-void tokenizer_enable_empty_tokens(TOKENIZER *self, bool yesno)
+void tokenizer_enable_empty_tokens(TOKENIZER * self, bool yesno)
 {
     self->allow_empty_tokens = yesno;
 }
 
-void tokenizer_enable_trimming(TOKENIZER *self, bool yesno)
+void tokenizer_enable_trimming(TOKENIZER * self, bool yesno)
 {
     self->trim_token = yesno;
 }
 
-void tokenizer_enable_escaped_delimiters(TOKENIZER *self, bool yesno)
+void tokenizer_enable_escaped_delimiters(TOKENIZER * self, bool yesno)
 {
     self->allow_escape_characters = yesno;
 }
 
-void tokenizer_set_quotes(TOKENIZER *self, char quote_open, char quote_close)
+void tokenizer_set_quotes(TOKENIZER * self, char quote_open, char quote_close)
 {
     self->allow_quotes = true;
     self->quote_open = quote_open;
     self->quote_close = quote_close;
 }
 
-void tokenizer_set_delimiters(TOKENIZER *self, const char *delimiters)
+void tokenizer_set_delimiters(TOKENIZER * self, const char *delimiters)
 {
     self->delimiters = delimiters;
 }
 
-void tokenizer_set_excludes(TOKENIZER *self, const STRINGLIST *excludes)
+void tokenizer_set_excludes(TOKENIZER * self, const STRINGLIST * excludes)
 {
     self->excludes = excludes;
 }
@@ -120,7 +120,7 @@ static void remove_string(char *string, const char *remove)
 {
     char *found;
     size_t length_remove = strlen(remove);
-    while((found = strstr(string, remove)) != NULL)
+    while ((found = strstr(string, remove)) != NULL)
     {
         size_t remaining = strlen(found + length_remove) + 1;
         (void)memmove(found, found + length_remove, remaining);
@@ -149,10 +149,10 @@ static void trim_string(char *string)
 static void remove_escape_character(char *string, char escape_character)
 {
     char *found;
-    while((found = strchr(string, escape_character)) != NULL)
+    while ((found = strchr(string, escape_character)) != NULL)
     {
         size_t n = strlen(found);
-        (void)memmove(found, found+1, n);
+        (void)memmove(found, found + 1, n);
         /* Handle double escape character by skipping forward */
         if (found && *found == escape_character)
         {
@@ -174,7 +174,7 @@ static inline bool delimiter(const char *string, const char *delimiters)
     return false;
 }
 
-static void token_add(TOKENIZER *self, char *token)
+static void token_add(TOKENIZER * self, char *token)
 {
     if (self->allow_escape_characters)
     {
@@ -195,7 +195,7 @@ static void token_add(TOKENIZER *self, char *token)
     stringlist_add(self->tokens, token);
 }
 
-static void tokenize(TOKENIZER *self)
+static void tokenize(TOKENIZER * self)
 {
     register char *i = self->copy;
     bool inside_token = false;
@@ -244,7 +244,7 @@ static void tokenize(TOKENIZER *self)
     }
 }
 
-STRINGLIST *tokenizer_create_tokens(TOKENIZER *self, const char *original)
+STRINGLIST *tokenizer_create_tokens(TOKENIZER * self, const char *original)
 {
     self->original = original;
     self->copy = Strdup(original);
@@ -256,7 +256,7 @@ STRINGLIST *tokenizer_create_tokens(TOKENIZER *self, const char *original)
     return self->tokens;
 }
 
-void tokenizer_free_tokens(TOKENIZER *self)
+void tokenizer_free_tokens(TOKENIZER * self)
 {
     stringlist_delete(self->tokens);
     Free(self->copy);

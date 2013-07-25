@@ -39,7 +39,7 @@ STRINGLIST *stringlist_new()
     return self;
 }
 
-void stringlist_delete(STRINGLIST *self)
+void stringlist_delete(STRINGLIST * self)
 {
     if (self->internal_allocation)
     {
@@ -55,7 +55,7 @@ void stringlist_delete(STRINGLIST *self)
     Free(self);
 }
 
-STRINGLIST *stringlist_copy(const STRINGLIST *self)
+STRINGLIST *stringlist_copy(const STRINGLIST * self)
 {
     STRINGLIST *copy = MALLOC(STRINGLIST);
     copy->allocated = self->allocated;
@@ -66,7 +66,7 @@ STRINGLIST *stringlist_copy(const STRINGLIST *self)
     {
         if (self->strings[i])
         {
-            copy->strings[i] = Strdup(self->strings[i]); // Deep copy
+            copy->strings[i] = Strdup(self->strings[i]);    // Deep copy
         }
         else
         {
@@ -76,13 +76,12 @@ STRINGLIST *stringlist_copy(const STRINGLIST *self)
     return copy;
 }
 
-void stringlist_add(STRINGLIST *self, char *string)
+void stringlist_add(STRINGLIST * self, char *string)
 {
     if (self->used == self->allocated)
     {
         self->allocated *= 2;
-        self->strings =
-            REALLOC_ARRAY(self->strings, self->allocated, char *);
+        self->strings = REALLOC_ARRAY(self->strings, self->allocated, char *);
     }
     if (self->internal_allocation)
     {
@@ -94,17 +93,17 @@ void stringlist_add(STRINGLIST *self, char *string)
     }
 }
 
-const char *stringlist_string(const STRINGLIST *self, size_t index)
+const char *stringlist_string(const STRINGLIST * self, size_t index)
 {
     return self->strings[index];
 }
 
-size_t stringlist_size(const STRINGLIST *self)
+size_t stringlist_size(const STRINGLIST * self)
 {
     return self->used;
 }
 
-void stringlist_debug(const STRINGLIST *self)
+void stringlist_debug(const STRINGLIST * self)
 {
     for (size_t i = 0; i < self->used; ++i)
     {

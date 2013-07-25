@@ -32,11 +32,11 @@ extern int Sscanf(const char *str, const char *format, ...);
 
 /* allocates a single object using malloc(). */
 #define MALLOC(type) ((type *)Malloc(sizeof(type)))
- 
+
 /* allocates an array of objects using malloc(). */
 #define MALLOC_ARRAY(number, type) \
         ((type *)Malloc((number) * sizeof(type)))
- 
+
 /* reallocates an array of objects using realloc(). */
 #define REALLOC_ARRAY(pointer, number, type) \
         ((type *)Realloc(pointer, (number) * sizeof(type)))

@@ -28,29 +28,29 @@
 
 const char *argp_program_version = "pk 1.0";
 const char *argp_program_bug_address =
-                "[ https://github.com/johnmorrow/pk/issues ]";
+    "[ https://github.com/johnmorrow/pk/issues ]";
 static char args_doc[] = "[STRING...]";
 static char doc[] = "A field extraction utility";
 
 static struct argp_option options[] = {
     {"backslash", 'b', 0, 0,
-        "Backslash escapes delimiters", 0},
+     "Backslash escapes delimiters", 0},
     {"delimiters", 'd', "STRING", 0,
-        "Characters used as input delimiters", 0},
+     "Characters used as input delimiters", 0},
     {"empty", 'e', 0, 0,
-        "Allow empty fields", 0},
+     "Allow empty fields", 0},
     {"excludes", 'E', "STRINGS", 1,
-        "Strings excluded from output (separated by :)", 0},
+     "Strings excluded from output (separated by :)", 0},
     {"file", 'f', "FILE", 0,
-        "Read input from file instead of stdin", 0},
+     "Read input from file instead of stdin", 0},
     {"null", 'N', "STRING", 1,
-        "Change output text used for empty fields", 0},
+     "Change output text used for empty fields", 0},
     {"quotes", 'q', "STRING", 1,
-        "Ignore delimiters within quotes", 0},
+     "Ignore delimiters within quotes", 0},
     {"separator", 'S', "STRING", 0,
-        "Separator used in output text", 0},
+     "Separator used in output text", 0},
     {"trim", 'T', 0, 0,
-        "Trim non-alphanumerics characters before printing", 0},
+     "Trim non-alphanumerics characters before printing", 0},
     {0, 0, 0, 0, 0, 0}
 };
 
@@ -69,7 +69,7 @@ static STRINGLIST *make_excludes(const char *input)
     return excludes;
 }
 
-static void set_quote_characters(CONFIGURATION *self, const char *input)
+static void set_quote_characters(CONFIGURATION * self, const char *input)
 {
     self->ignore_quoted_delimiters = true;
     if (!input)
@@ -115,8 +115,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
     case ARGP_KEY_NO_ARGS:
         configuration_delete(configuration);
         argp_usage(state);
-         /*NOTREACHED*/
-        break;
+         /*NOTREACHED*/ break;
     case ARGP_KEY_ARG:
         for (int i = state->next - 1; i >= 0 && i < state->argc; ++i)
         {
@@ -150,7 +149,7 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     return self;
 }
 
-void configuration_delete(CONFIGURATION *self)
+void configuration_delete(CONFIGURATION * self)
 {
     if (self->excludes)
     {

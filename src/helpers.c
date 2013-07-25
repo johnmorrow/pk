@@ -15,7 +15,7 @@
  *
  */
 
-#include <error.h>
+#include <err.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +76,7 @@ size_t Position_to_index(size_t position)
 {
     if (position == 0)
     {
-        error(EXIT_FAILURE, 0, "offset bug detected");
+        err(EXIT_FAILURE, "offset bug detected");
     }
     return position - 1;
 }

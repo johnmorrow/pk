@@ -23,6 +23,7 @@
 #include <string.h>
 #include <execinfo.h>
 
+#include "compat.h"
 #include "wrappers.h"
 
 void *Malloc(size_t size)

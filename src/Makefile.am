@@ -6,10 +6,10 @@ AM_CFLAGS = -std=c99 -D_DARWIN_C_SOURCE -D_XOPEN_SOURCE=700 -D_BSD_SOURCE \
 
 bin_PROGRAMS = pk
 
-pk_SOURCES = configuration.c fieldprinter.c helpers.c main.c stringlist.c \
-                 tokenizer.c wrappers.c
+pk_SOURCES = compat.c configuration.c fieldprinter.c helpers.c main.c \
+                 stringlist.c tokenizer.c wrappers.c
 
 pk_LDADD = $(ARGP_LIBS)
 
-noinst_HEADERS = configuration.h fieldprinter.h helpers.h stringlist.h \
-                 tokenizer.h wrappers.h
+noinst_HEADERS = compat.h configuration.h fieldprinter.h helpers.h \
+                 stringlist.h tokenizer.h wrappers.h

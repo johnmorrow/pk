@@ -1,0 +1,13 @@
+Source: pk
+Section: admin
+Priority: optional
+Maintainer: Jaco Engelbrecht (bje) <bje@serendipity.org.za>
+Build-Depends: cdbs, debhelper (>= 5.0.0)
+Standards-Version: 3.9.1
+Homepage: http://pk.github.com/
+
+Package: pk
+Architecture: all
+Depends: cdbs, autoconf, automake
+Description: pk
+ A field extraction utility.

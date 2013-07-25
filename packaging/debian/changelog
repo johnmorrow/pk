@@ -1,5 +1,5 @@
-pk (0.1) precise; urgency=low
+pk (1.0) precise; urgency=low
 
-  * Initial release. (Closes: #XXXXXX)
+  * Initial release.
 
- -- Systems Administrator <root@services0.networkgods.net>  Wed, 24 Jul 2013 19:10:42 +0000
+ -- Jaco Engelbrecht <bje@serendipity.org.za>  Wed, 24 Jul 2013 19:10:42 +0000

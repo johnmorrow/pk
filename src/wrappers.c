@@ -23,6 +23,7 @@
 #include <string.h>
 #include <execinfo.h>
 
+#include "compat.h"
 #include "wrappers.h"
 
 void *Malloc(size_t size)
@@ -122,18 +123,4 @@ char *Strdup(const char *s)
         err(EXIT_FAILURE, "unable to duplicate string");
     }
     return copy;
-}
-
-int Sscanf(const char *str, const char *fmt, ...)
-{
-    va_list ap;
-    va_start(ap, fmt);
-    errno = 0;
-    int retval = vsscanf(str, fmt, ap);
-    va_end(ap);
-    if (retval != 0 && errno != 0)
-    {
-        err(EXIT_FAILURE, "problem parsing input");
-    }
-    return retval;
 }

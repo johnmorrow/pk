@@ -76,7 +76,7 @@ size_t Position_to_index(size_t position)
 {
     if (position == 0)
     {
-        err(EXIT_FAILURE, "offset bug detected");
+        errx(EXIT_FAILURE, "offset bug detected");
     }
     return position - 1;
 }

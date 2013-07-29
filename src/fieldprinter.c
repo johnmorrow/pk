@@ -50,42 +50,117 @@ struct fieldprinter_s
     bool at_start;
 };
 
+static struct field_s *field_number(size_t number)
+{
+    struct field_s *retval = MALLOC(struct field_s);
+    retval->which = NUMBER;
+    retval->u.number = number;
+    return retval;
+}
+
+static struct field_s *field_range(size_t start, size_t finish)
+{
+    struct field_s *retval = MALLOC(struct field_s);
+    retval->which = RANGE;
+    retval->u.range.start = start;
+    retval->u.range.finish = finish;
+    return retval;
+}
+
+static struct field_s *field_string(const char *str)
+{
+    struct field_s *retval = MALLOC(struct field_s);
+    retval->which = STRING;
+    retval->u.string = str;
+    return retval;
+}
+
+static bool is_long(register const char *str, size_t len, size_t start,
+                    size_t * finish, register unsigned long *number)
+{
+    register unsigned int pos = start;
+    register unsigned long result = 0;
+    register unsigned long c;
+    if (start >= len)
+    {
+        return false;
+    }
+    while ((c = (unsigned long)(unsigned char)(str[pos] - '0')) < 10)
+    {
+        result = result * 10 + c;
+        ++pos;
+    }
+    *number = result;
+    *finish = pos;
+    return pos != 0;
+}
+
+static bool is_range(const char *str, size_t len, size_t start,
+                     size_t * finish)
+{
+    if (start >= len)
+    {
+        return false;
+    }
+    if (str[start] == '.' && str[start + 1] == '.')
+    {
+        *finish = start + 2;
+        return true;
+    }
+    return false;
+}
+
+static bool is_end(const char *str, size_t len, size_t start, size_t * finish)
+{
+    if (start >= len)
+    {
+        return true;
+    }
+    return false;
+}
+
 static struct field_s *str_to_field(const char *str)
 {
-    char *tmp1 = NULL;
-    struct field_s *retval = MALLOC(struct field_s);
-    if (Sscanf
-        (str, "%zu..%zu", &retval->u.range.start,
-         &retval->u.range.finish) == 2)
+    unsigned long end;
+    unsigned long start;
+    size_t at = 0;
+    size_t len = strlen(str);
+    if (is_long(str, len, at, &at, &start))
     {
-        retval->which = RANGE;
+        if (is_range(str, len, at, &at))
+        {
+            if (is_long(str, len, at, &at, &end))
+            {
+                if (is_end(str, len, at, &at))
+                {
+                    return field_range(start, end);
+                }
+            }
+            else if (is_end(str, len, at, &at))
+            {
+                return field_range(start, 0);
+            }
+        }
+        else if (is_end(str, len, at, &at))
+        {
+            return field_number(start);
+        }
     }
-    else if (Sscanf(str, "%zu%[.]", &retval->u.range.start, &tmp1) == 2)
+    else if (is_range(str, len, at, &at))
     {
-        retval->u.range.finish = 0;
-        retval->which = RANGE;
+        if (is_long(str, len, at, &at, &end))
+        {
+            if (is_end(str, len, at, &at))
+            {
+                return field_range(1, end);
+            }
+        }
+        else if (is_end(str, len, at, &at))
+        {
+            return field_range(1, 0);
+        }
     }
-    else if (Sscanf(str, "..%zu", &retval->u.range.finish) == 1)
-    {
-        retval->u.range.start = 1;
-        retval->which = RANGE;
-    }
-    else if (strcmp(str, "..") == 0)
-    {
-        retval->u.range.start = 1;
-        retval->u.range.finish = 0;
-        retval->which = RANGE;
-    }
-    else if (Sscanf(str, "%zu", &retval->u.number) == 1)
-    {
-        retval->which = NUMBER;
-    }
-    else
-    {
-        retval->u.string = str;
-        retval->which = STRING;
-    }
-    return retval;
+    return field_string(str);
 }
 
 FIELDPRINTER *fieldprinter_new(STRINGLIST * fields, const char *separator,

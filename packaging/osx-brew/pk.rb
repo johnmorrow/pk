@@ -1,3 +1,10 @@
+# pk is currently too new to be included the homebrew repo directly.
+# However you can still install and manage with homebrew:
+#
+#   $ brew install https://github.com/johnmorrow/pk/v1.0.2/packaging/osx-brew/pk.rb
+#
+# Enjoy!
+
 require 'formula'
 
 class Pk < Formula

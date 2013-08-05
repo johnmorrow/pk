@@ -1,0 +1,6 @@
+pk is a field extraction utility, aimed at making common command line
+text processing simpler. It will grab columns from an input stream,
+split them based on whitespace (or other separator) and output on or
+more of them in a specified format.
+
+WWW: http://amoeba.org/pk/

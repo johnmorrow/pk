@@ -1,4 +1,16 @@
-pk (1.0) precise; urgency=low
+pk (1.0.2) precise; urgency=low
+
+  * Include tests in dist, tests run on Mac OS X.
+
+ -- Jaco Engelbrecht <bje@serendipity.org.za>  Fri,  9 Aug 2013 19:03:04 +0000
+
+pk (1.0.1) precise; urgency=low
+
+  * Detect getline and fixed range parsing bugs.
+
+ -- Jaco Engelbrecht <bje@serendipity.org.za>  Fri,  9 Aug 2013 19:03:04 +0000
+
+pk (1.0.0) precise; urgency=low
 
   * Initial release.
 

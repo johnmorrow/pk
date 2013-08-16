@@ -4,7 +4,7 @@ Priority: optional
 Maintainer: Jaco Engelbrecht (bje) <bje@serendipity.org.za>
 Build-Depends: cdbs, debhelper (>= 5.0.0)
 Standards-Version: 3.9.1
-Homepage: http://pk.github.com/
+Homepage: http://amoeba.org/pk
 
 Package: pk
 Architecture: all

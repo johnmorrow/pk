@@ -18,7 +18,12 @@
 #ifndef WRAPPERS__H
 #define WRAPPERS__H
 
+#ifdef HAVE_GETLINE
+#  define _GNU_SOURCE
+#endif
+
 #include <stdio.h>
+#include <unistd.h>
 
 extern void *Malloc(size_t);
 extern void *Realloc(void *, size_t);

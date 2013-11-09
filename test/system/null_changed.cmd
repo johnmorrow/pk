@@ -1,1 +1,1 @@
-../../src/pk -d: -e -NEMPTY 1 2 6
+${PK} -d: -e -NEMPTY 1 2 6

@@ -1,1 +1,1 @@
-../../src/pk -E.foo.com:.bar.com 1
+${PK} -E.foo.com:.bar.com 1

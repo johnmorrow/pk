@@ -1,1 +1,1 @@
-../../src/pk -EXXX 1
+${PK} -EXXX 1

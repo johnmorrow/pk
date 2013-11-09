@@ -1,0 +1,39 @@
+#!/bin/sh -e
+
+# Keeping the strict compilation flags in here, they are useful
+# for keeping the code clean but get in the way when it comes to
+# building on many platforms.
+
+if [ $# -eq 0 ]
+then
+    echo "Usage : $0 [configure|make|clean|test]"
+    exit 1
+fi
+if [ ! -f Makefile.in ]
+then
+    ./autogen
+fi
+mkdir -p bin/debug
+cd bin/debug
+for i in ${1+"$@"}
+do
+    case "$i" in
+        configure)
+            ../../configure CFLAGS="-g -O2 -Wall -Werror -Wextra \
+              -Wwrite-strings -Winit-self -Wcast-align -Wcast-qual \
+              -Wpointer-arith -Wstrict-aliasing -Wformat -Wformat-security \
+              -Wformat-y2k -Wuninitialized -Wmissing-declarations \
+              -Wno-long-long -Wno-unused-parameter \
+              -Wno-missing-field-initializers ${CFLAGS}"
+            ;;
+        make)
+            make
+            ;;
+        clean)
+            make clean
+            ;;
+        test)
+            PK=$(pwd)/src/pk ../../test/system/run
+            ;;
+    esac
+done

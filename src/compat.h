@@ -18,13 +18,14 @@
 #ifndef COMPAT__H
 #define COMPAT__H
 
-#include <stdio.h>
-#include <unistd.h>
-
-#include "../config.h"
+#include "config.h"
+#ifdef HAVE_GETLINE
+#  define _GNU_SOURCE
+#endif
 
 #ifndef HAVE_GETLINE
-ssize_t getline(char **, size_t *, FILE *);
+#  include <unistd.h>
+extern ssize_t getline(char **, size_t *, FILE *);
 #endif
 
 #endif

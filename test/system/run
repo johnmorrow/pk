@@ -1,14 +1,13 @@
-#!/bin/bash
-if command -v md5sum &>/dev/null
-then
-    compare=md5sum
-elif command -v md5 &>/dev/null
-then
-    compare=md5
-else
-    echo "Need md5 or md5sum to compare. File a bug"
-    exit 1
+#!/bin/sh
+compare=$(which md5)
+if [ ! "${compare}" ] ; then
+    compare=$(which md5sum)
+    if [ ! "${compare}" ] ; then
+        echo "Need md5 or md5sum to compare. File a bug"
+        exit 1
+    fi
 fi
+PK=${PK-'../../src/pk'}
 cd $(dirname $0)
 for i in $(find . -name "*.cmd" -print | sort)
 do

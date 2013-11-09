@@ -15,6 +15,8 @@
  *
  */
 
+#include "compat.h"
+
 #include <err.h>
 #include <errno.h>
 #include <stdio.h>
@@ -23,7 +25,6 @@
 #include <string.h>
 #include <execinfo.h>
 
-#include "compat.h"
 #include "wrappers.h"
 
 void *Malloc(size_t size)

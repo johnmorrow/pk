@@ -36,8 +36,8 @@ int main(int argc, char **argv)
         Fclose(stdin);
         input = Fopen(configuration->file, "r");
     }
-    setlinebuf(input);
-    setlinebuf(stdout);
+    setvbuf(input, (char *) NULL, _IOLBF, 0);
+    setvbuf(stdout, (char *) NULL, _IOLBF, 0);
     TOKENIZER *tokenizer = tokenizer_new();
     tokenizer_enable_empty_tokens(tokenizer,
                                   configuration->allow_empty_tokens);

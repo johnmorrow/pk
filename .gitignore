@@ -49,3 +49,7 @@ Makefile.in
 
 core
 vgcore.*
+
+# output directories
+#
+/bin/

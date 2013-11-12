@@ -66,8 +66,11 @@ int main(int argc, char **argv)
     }
     Free(line);
     fieldprinter_delete(printer);
+    printer = NULL;
     tokenizer_delete(tokenizer);
+    tokenizer = NULL;
     Fclose(input);
     configuration_delete(configuration);
+    configuration = NULL;
     exit(EXIT_SUCCESS);
 }

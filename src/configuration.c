@@ -20,6 +20,7 @@
 
 #include <argp.h>
 
+#include "command_line.h"
 #include "configuration.h"
 #include "helpers.h"
 #include "tokenizer.h"
@@ -66,6 +67,7 @@ static STRINGLIST *make_excludes(const char *input)
     STRINGLIST *excludes = stringlist_copy(tokenizer_create_tokens(t, input));
     tokenizer_free_tokens(t);
     tokenizer_delete(t);
+    t = NULL;
     return excludes;
 }
 
@@ -114,6 +116,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         break;
     case ARGP_KEY_NO_ARGS:
         configuration_delete(configuration);
+        configuration = NULL;
         argp_usage(state);
          /*NOTREACHED*/ break;
     case ARGP_KEY_ARG:
@@ -146,6 +149,30 @@ CONFIGURATION *configuration_new(int argc, char **argv)
     self->quote_close = '"';
     struct argp argp = { options, parse_opt, args_doc, doc, 0, 0, 0 };
     argp_parse(&argp, argc, argv, 0, 0, self);
+
+    COMMAND_LINE *command_line = command_line_new();
+    command_line_add_flag(command_line,
+        'b', "backslash", "Backslash escapes delimiters");
+
+#if 0
+    command_line_add_flag('d', "delimiters", COMMAND_LINE_STRING, "Characters used as input delimiters");
+    command_line_add_flag('e', "empty", COMMAND_LINE_FLAG, "Allow empty fields");
+    {"excludes", 'E', "STRINGS", 1,
+     "Strings excluded from output (separated by :)", 0},
+    {"file", 'f', "FILE", 0,
+     "Read input from file instead of stdin", 0},
+    {"null", 'N', "STRING", 1,
+     "Change output text used for empty fields", 0},
+    {"quotes", 'q', "STRING", 1,
+     "Ignore delimiters within quotes", 0},
+    {"separator", 'S', "STRING", 0,
+     "Separator used in output text", 0},
+    {"trim", 'T', 0, 0,
+     "Trim non-alphanumerics characters before printing", 0},
+#endif
+
+    command_line_delete(command_line);
+    command_line = NULL;
     return self;
 }
 
@@ -154,8 +181,10 @@ void configuration_delete(CONFIGURATION * self)
     if (self->excludes)
     {
         stringlist_delete(self->excludes);
+        self->excludes = NULL;
     }
     stringlist_delete(self->fields);
+    self->fields = NULL;
     Free(self->delimiters);
     Free(self);
 }

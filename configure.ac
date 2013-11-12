@@ -15,5 +15,5 @@ AC_TYPE_SSIZE_T
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
 AC_SUBST([ARGP_LIBS])
-AC_CONFIG_FILES([Makefile src/Makefile])
+AC_CONFIG_FILES([Makefile src/Makefile test/unit/Makefile])
 AC_OUTPUT

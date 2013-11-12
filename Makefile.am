@@ -1,4 +1,4 @@
-SUBDIRS = src
+SUBDIRS = src test/unit
 MAINTAINERCLEANFILES = Makefile.in aclocal.m4 configure depcomp install-sh \
                        missing src/Makefile.in
 

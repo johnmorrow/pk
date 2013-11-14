@@ -112,6 +112,10 @@ static void remove_line_ending(char *line)
     while (line[end_index] == '\n' || line[end_index] == '\r')
     {
         line[end_index] = '\0';
+        if (end_index == 0)
+        {
+            break;
+        }
         end_index -= 1;
     }
 }

@@ -101,7 +101,8 @@ of output.
 By using the __-d__ flag you can change the set of delimiters. Note
 that the string argument to __-d__ contains a set of characters, each
 of which is a delimiter. This is a not a fixed string that separates
-each field.
+each field. Note that you can pass an explicit `<tab>` as a delimiter
+by enclosing __\t__ in double quotes: __-d"\t"__.
 
 #### The output separator
 

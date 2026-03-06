@@ -131,17 +131,17 @@ static struct field_s *str_to_field(const char *str)
         {
             if (is_long(str, len, at, &at, &end))
             {
-                if (is_end(str, len, at, &at))
+                if (is_end(str, len, at, &at) && start > 0 && end > 0)
                 {
                     return field_range(start, end);
                 }
             }
-            else if (is_end(str, len, at, &at))
+            else if (is_end(str, len, at, &at) && start > 0)
             {
                 return field_range(start, 0);
             }
         }
-        else if (is_end(str, len, at, &at))
+        else if (is_end(str, len, at, &at) && start > 0)
         {
             return field_number(start);
         }

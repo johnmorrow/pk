@@ -89,6 +89,7 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->backslash_escapes_delimiters = true;
         break;
     case 'd':
+        Free(configuration->delimiters);
         configuration->delimiters = convert_escaped_delimiters(arg);
         break;
     case 'e':

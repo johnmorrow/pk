@@ -44,6 +44,11 @@ OPTIONS
   arguments causes empty fields to be excluded from output without any
   indication.
 
+* `-q`, `--quotes`[=<STRING>]:
+  Ignore delimiters within quotes. The default quote character is double
+  quote. A single character argument changes the quote character. A two
+  character argument specifies open and close quote characters.
+
 * `-T`, `--trim`:
   Trim non-alphanumerics characters from the beginning and end of each
   field before printing.
@@ -78,13 +83,13 @@ Non-numeric fields are outputted directly:
 
 Ranges are also supported:
 
-    $ echo A B C D | pk 2-3
+    $ echo A B C D | pk 2..3
     B C
-    $ echo A B C D | pk 2-
+    $ echo A B C D | pk 2..
     B C D
-    $ echo A B C D | pk -- -3  # careful, looks like a flag
+    $ echo A B C D | pk ..3
     A B C
-    $ echo A B C D | pk -
+    $ echo A B C D | pk ..
     A B C D
 
 Change the output separator to create new file formats:

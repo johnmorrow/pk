@@ -106,6 +106,9 @@ be represented in the output by the string NULL. Using this flag causes
 the string <var>STRING</var> to be used instead. Using this flag without an
 arguments causes empty fields to be excluded from output without any
 indication.</p></dd>
+<dt><code>-q</code>, <code>--quotes</code>[=<var>STRING</var>]</dt><dd><p>Ignore delimiters within quotes. The default quote character is double
+quote. A single character argument changes the quote character. A two
+character argument specifies open and close quote characters.</p></dd>
 <dt><code>-T</code>, <code>--trim</code></dt><dd><p>Trim non-alphanumerics characters from the beginning and end of each
 field before printing.</p></dd>
 <dt><code>-?</code>, <code>--help</code></dt><dd><p>Displays a short help message.</p></dd>
@@ -137,13 +140,13 @@ apparmor/ is owned by root
 
 <p>Ranges are also supported:</p>
 
-<pre><code>$ echo A B C D | pk 2-3
+<pre><code>$ echo A B C D | pk 2..3
 B C
-$ echo A B C D | pk 2-
+$ echo A B C D | pk 2..
 B C D
-$ echo A B C D | pk -- -3  # careful, looks like a flag
+$ echo A B C D | pk ..3
 A B C
-$ echo A B C D | pk -
+$ echo A B C D | pk ..
 A B C D
 </code></pre>
 

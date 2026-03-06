@@ -46,6 +46,10 @@ The specified STRING is printed between requested fields on stdout\. If this fla
 By default fields that have been directly requested but are empty will be represented in the output by the string NULL\. Using this flag causes the string \fISTRING\fR to be used instead\. Using this flag without an arguments causes empty fields to be excluded from output without any indication\.
 .
 .TP
+\fB\-q\fR, \fB\-\-quotes\fR[=\fISTRING\fR]
+Ignore delimiters within quotes\. The default quote character is double quote\. A single character argument changes the quote character\. A two character argument specifies open and close quote characters\.
+.
+.TP
 \fB\-T\fR, \fB\-\-trim\fR
 Trim non\-alphanumerics characters from the beginning and end of each field before printing\.
 .
@@ -103,13 +107,13 @@ Ranges are also supported:
 .
 .nf
 
-$ echo A B C D | pk 2\-3
+$ echo A B C D | pk 2\.\.3
 B C
-$ echo A B C D | pk 2\-
+$ echo A B C D | pk 2\.\.
 B C D
-$ echo A B C D | pk \-\- \-3  # careful, looks like a flag
+$ echo A B C D | pk \.\.3
 A B C
-$ echo A B C D | pk \-
+$ echo A B C D | pk \.\.
 A B C D
 .
 .fi

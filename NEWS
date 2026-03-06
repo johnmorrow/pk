@@ -1,3 +1,11 @@
+Mar 5 2026  John Morrow     <jmorrow@amoeba.org>
+
+    * 1.1.0 - Bug fixes: segfault with -e and trailing delimiters combined
+      with -b/-T/-E, crash on field index 0, reversed ranges producing empty
+      output, memory leaks when -d or -E override defaults, integer overflow
+      in field number parsing. Documentation fixes: corrected range syntax
+      in manpage, added missing -q flag to OPTIONS section.
+
 Jul 29 2013 John Morrow     <jmorrow@amoeba.org>
 
     * 1.0.2 - Include tests in dist, tests run on Mac OS X.

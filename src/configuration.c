@@ -26,7 +26,7 @@
 #include "wrappers.h"
 
 
-const char *argp_program_version = "pk 1.0";
+const char *argp_program_version = "pk 1.1.0";
 const char *argp_program_bug_address =
     "[ https://github.com/johnmorrow/pk/issues ]";
 static char args_doc[] = "[STRING...]";

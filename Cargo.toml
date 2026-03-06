@@ -1,0 +1,18 @@
+[package]
+name = "pk"
+version = "1.1.0"
+edition = "2021"
+description = "A field extraction utility"
+license = "Apache-2.0"
+repository = "https://github.com/johnmorrow/pk"
+
+[[bin]]
+name = "pk"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+
+[profile.release]
+lto = true
+strip = true

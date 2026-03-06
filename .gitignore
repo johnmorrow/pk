@@ -1,55 +1,10 @@
-# Object files
-*.o
+# Rust
+/target/
+Cargo.lock
 
-# Libraries
-*.lib
-*.a
-
-# Shared objects (inc. Windows DLLs)
-*.dll
-*.so
-*.so.*
-*.dylib
-
-# Executables
-*.exe
-*.app
-
-# vim swap files
+# Editors
 *.swp
-
-# http://www.gnu.org/software/automake
-
-Makefile.in
-
-# http://www.gnu.org/software/autoconf
-
-/autom4te.cache
-/aclocal.m4
-/compile
-/configure
-/depcomp
-/install-sh
-/missing
-/Makefile
-/config.log
-/config.status
-/src/.deps/
-/src/Makefile
-/src/pk
-/stamp-h1
-/config.h
-/config.h.in
-
-# backups
-
 *~
 
-# debugging stuff
-
-core
-vgcore.*
-
-# output directories
-#
-/bin/
+# OS
+.DS_Store

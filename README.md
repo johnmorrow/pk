@@ -2,32 +2,47 @@
 
 [![License](https://img.shields.io/github/license/johnmorrow/pk)](https://github.com/johnmorrow/pk/blob/master/COPYING)
 [![GitHub issues](https://img.shields.io/github/issues/johnmorrow/pk)](https://github.com/johnmorrow/pk/issues)
-[![C99](https://img.shields.io/badge/language-C99-blue)](https://github.com/johnmorrow/pk)
+[![Rust](https://img.shields.io/badge/language-Rust-orange)](https://github.com/johnmorrow/pk)
 
 Do you use lots of shell pipelines and find yourself choosing between _cut_
 and _awk_ to select columns from input? _pk_ is designed as a middle-ground
 tool; flexible enough to handle variable numbers of delimiters, fixed format
 files, quoted or escaped delimiters and more.
 
+Install
+-------
+
+With Rust installed:
+```shell
+cargo install --git https://github.com/johnmorrow/pk
+```
+
+Or build from source:
+```shell
+git clone https://github.com/johnmorrow/pk.git
+cd pk
+cargo build --release
+# binary is at target/release/pk
+```
+
 Usage
 -----
 
-```shell
-Usage: pk [OPTION...] [STRING...]
-A field extraction utility
+```
+Usage: pk [OPTIONS] <FIELDS>...
 
-  -b, --backslash            Backslash escapes delimiters
-  -d, --delimiters=STRING    Characters used as input delimiters
-  -e, --empty                Allow empty fields
-  -E, --excludes[=STRINGS]   Strings excluded from output (separated by :)
-  -f, --file=FILE            Read input from file instead of stdin
-  -N, --null[=STRING]        Change output text used for empty fields
-  -q, --quotes[=STRING]      Ignore delimiters within quotes
-  -S, --separator=STRING     Separator used in output text
-  -T, --trim                 Trim non-alphanumerics characters before printing
-  -?, --help                 Give this help list
-      --usage                Give a short usage message
-  -V, --version              Print program version
+Options:
+  -b, --backslash                Backslash escapes delimiters
+  -d, --delimiters <DELIMITERS>  Characters used as input delimiters
+  -e, --empty                    Allow empty fields
+  -E[STRINGS]                    Strings excluded from output (separated by :)
+  -f, --file <FILE>              Read input from file instead of stdin
+  -N[STRING]                     Change output text used for empty fields
+  -q[STRING]                     Ignore delimiters within quotes
+  -S, --separator <SEPARATOR>    Separator used in output text
+  -T, --trim                     Trim non-alphanumeric characters before printing
+  -h, --help                     Print help
+  -V, --version                  Print version
 ```
 
 It may help to remember that when using short flags, lower-case flags

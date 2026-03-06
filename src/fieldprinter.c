@@ -251,6 +251,12 @@ void fieldprinter_print(FIELDPRINTER * self, const STRINGLIST * tokens)
             {
                 range_index_finish = Position_to_index(f->u.range.finish);
             }
+            if (range_index_start > range_index_finish)
+            {
+                size_t tmp = range_index_start;
+                range_index_start = range_index_finish;
+                range_index_finish = tmp;
+            }
             for (size_t i = range_index_start; i <= range_index_finish; i++)
             {
                 output_field(self, tokens, i);

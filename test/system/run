@@ -7,7 +7,7 @@ if [ ! "${compare}" ] ; then
         exit 1
     fi
 fi
-PK=${PK-'../../src/pk'}
+PK=${PK-'../../target/debug/pk'}
 cd $(dirname $0)
 for i in $(find . -name "*.cmd" -print | sort)
 do

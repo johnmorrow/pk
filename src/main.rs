@@ -4,7 +4,7 @@ use std::io::{self, BufRead, Write};
 use std::process;
 
 #[derive(Parser)]
-#[command(name = "pk", version = "1.1.0", about = "A field extraction utility",
+#[command(name = "pk", version = "2.0.0", about = "A field extraction utility",
     after_help = "Optional-value flags (value must be directly attached, e.g. -Nfoo not -N foo):\n  \
                   -E[STRINGS]    Strings excluded from output (separated by :)\n  \
                   -N[STRING]     Change output text used for empty fields\n  \

@@ -1,3 +1,10 @@
+Mar 6 2026  John Morrow     <jmorrow@amoeba.org>
+
+    * 2.0.0 - Complete rewrite in Rust, replacing C and autotools build system.
+      Drop-in replacement with identical CLI interface and behavior. Includes
+      all bug fixes from 1.1.0. 2-3x performance improvement via buffered I/O.
+      Build with `cargo build --release`.
+
 Mar 5 2026  John Morrow     <jmorrow@amoeba.org>
 
     * 1.1.0 - Bug fixes: segfault with -e and trailing delimiters combined

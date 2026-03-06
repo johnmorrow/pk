@@ -87,12 +87,16 @@ static bool is_long(register const char *str, size_t len, size_t start,
     }
     while ((c = (unsigned long)(unsigned char)(str[pos] - '0')) < 10)
     {
+        if (result > (ULONG_MAX - c) / 10)
+        {
+            return false;
+        }
         result = result * 10 + c;
         ++pos;
     }
     *number = result;
     *finish = pos;
-    return pos != 0;
+    return pos != start;
 }
 
 static bool is_range(const char *str, size_t len, size_t start,

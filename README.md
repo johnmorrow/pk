@@ -1,5 +1,9 @@
 # pk -- a field extraction utility
 
+[![License](https://img.shields.io/github/license/johnmorrow/pk)](https://github.com/johnmorrow/pk/blob/master/COPYING)
+[![GitHub issues](https://img.shields.io/github/issues/johnmorrow/pk)](https://github.com/johnmorrow/pk/issues)
+[![C99](https://img.shields.io/badge/language-C99-blue)](https://github.com/johnmorrow/pk)
+
 Do you use lots of shell pipelines and find yourself choosing between _cut_
 and _awk_ to select columns from input? _pk_ is designed as a middle-ground
 tool; flexible enough to handle variable numbers of delimiters, fixed format

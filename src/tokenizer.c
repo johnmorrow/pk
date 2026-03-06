@@ -225,6 +225,10 @@ static void tokenize(TOKENIZER * self)
             {
                 /* Exiting a token */
                 *i = '\0';
+                if (!token)
+                {
+                    token = i;
+                }
                 token_add(self, token);
                 token = NULL;
             }
@@ -244,6 +248,10 @@ static void tokenize(TOKENIZER * self)
     }
     if (token || self->allow_empty_tokens)
     {
+        if (!token)
+        {
+            token = i;
+        }
         token_add(self, token);
     }
 }

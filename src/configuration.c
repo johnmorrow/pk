@@ -96,6 +96,10 @@ static error_t parse_opt(int key, char *arg, struct argp_state *state)
         configuration->allow_empty_tokens = true;
         break;
     case 'E':
+        if (configuration->excludes)
+        {
+            stringlist_delete(configuration->excludes);
+        }
         configuration->excludes = make_excludes(arg);
         break;
     case 'f':
